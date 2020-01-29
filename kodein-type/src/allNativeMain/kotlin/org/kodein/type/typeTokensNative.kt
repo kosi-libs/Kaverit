@@ -11,7 +11,9 @@ actual fun <T : Any> erasedOf(obj: T): TypeToken<out T> = NativeKClassTypeToken(
 
 actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = NativeKClassTypeToken(cls)
 
+@Suppress("unused")
 fun <T> erased(oClass: ObjCClass): TypeToken<T> = NativeKClassTypeToken(getOriginalKotlinClass(oClass) ?: error("$oClass is not a Kotlin class"))
+@Suppress("unused")
 fun <T> erased(oProtocol: ObjCProtocol): TypeToken<T> = NativeKClassTypeToken(getOriginalKotlinClass(oProtocol) ?: error("$oProtocol is not a Kotlin interface"))
 
 actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
@@ -29,6 +31,7 @@ actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken(typeOf<T
 /**
  * Gives a [TypeToken] representing the given type.
  */
+@Suppress("RemoveExplicitTypeArguments")
 fun typeToken(type: KType): TypeToken<*> =
         if (type.arguments.isEmpty()) NativeKClassTypeToken<Any>(type.classifier as KClass<*>)
         else NativeKTypeTypeToken<Any>(type)

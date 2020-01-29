@@ -36,7 +36,7 @@ internal class KodeinWrappedType(val type: Type) : Type {
     /** @suppress */
     override fun hashCode(): Int {
         if (hashCode == 0)
-            hashCode = Func.HashCode(type)
+            hashCode = Func.hashCode(type)
         return hashCode
     }
 
@@ -48,7 +48,7 @@ internal class KodeinWrappedType(val type: Type) : Type {
         if (hashCode() != other.hashCode())
             return false
 
-        return Func.Equals(type, other)
+        return Func.equals(type, other)
     }
 
     /** @suppress */
@@ -58,33 +58,33 @@ internal class KodeinWrappedType(val type: Type) : Type {
 
     private object Func {
 
-        fun HashCode(type: Type): Int = when(type) {
+        fun hashCode(type: Type): Int = when(type) {
             is Class<*> -> type.hashCode()
             is ParameterizedType -> {
-                var hashCode = HashCode(type.rawType)
+                var hashCode = hashCode(type.rawType)
                 for (arg in type.actualTypeArguments)
-                    hashCode = hashCode * 31 + HashCode(arg)
+                    hashCode = hashCode * 31 + hashCode(arg)
                 hashCode
             }
             is WildcardType -> {
                 var hashCode = 0
                 for (arg in type.upperBounds)
-                    hashCode = hashCode * 19 + HashCode(arg)
+                    hashCode = hashCode * 19 + hashCode(arg)
                 for (arg in type.lowerBounds)
-                    hashCode = hashCode * 17 + HashCode(arg)
+                    hashCode = hashCode * 17 + hashCode(arg)
                 hashCode
             }
-            is GenericArrayType -> 53 + HashCode(type.genericComponentType)
+            is GenericArrayType -> 53 + hashCode(type.genericComponentType)
             is TypeVariable<*> -> {
                 var hashCode = 0
                 for (arg in type.bounds)
-                    hashCode = hashCode * 29 + HashCode(arg)
+                    hashCode = hashCode * 29 + hashCode(arg)
                 hashCode
             }
             else -> type.hashCode()
         }
 
-        fun Equals(l: Type, r: Type): Boolean {
+        fun equals(l: Type, r: Type): Boolean {
             val left = l.javaType
             val right = r.javaType
 
@@ -95,28 +95,28 @@ internal class KodeinWrappedType(val type: Type) : Type {
                 is Class<*> -> left == right
                 is ParameterizedType -> {
                     right as ParameterizedType
-                    Equals(left.rawType, right.rawType) && Equals(left.actualTypeArguments, right.actualTypeArguments)
+                    equals(left.rawType, right.rawType) && equals(left.actualTypeArguments, right.actualTypeArguments)
                 }
                 is WildcardType -> {
                     right as WildcardType
-                    Equals(left.lowerBounds, right.lowerBounds) && Equals(left.upperBounds, right.upperBounds)
+                    equals(left.lowerBounds, right.lowerBounds) && equals(left.upperBounds, right.upperBounds)
                 }
                 is GenericArrayType -> {
                     right as GenericArrayType
-                    Equals(left.genericComponentType, right.genericComponentType)
+                    equals(left.genericComponentType, right.genericComponentType)
                 }
                 is TypeVariable<*> -> {
                     right as TypeVariable<*>
-                    Equals(left.bounds, right.bounds)
+                    equals(left.bounds, right.bounds)
                 }
                 else -> left == right
             }
         }
 
-        fun Equals(left: Array<Type>, right: Array<Type>): Boolean {
+        fun equals(left: Array<Type>, right: Array<Type>): Boolean {
             if (left.size != right.size)
                 return false
-            return left.indices.none { !Equals(left[it], right[it]) }
+            return left.indices.none { !equals(left[it], right[it]) }
         }
     }
 }

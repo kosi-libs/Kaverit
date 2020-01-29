@@ -10,4 +10,6 @@ expect inline fun <reified T : Any> erased(): TypeToken<T>
 
 expect inline fun <reified T : Any> generic(): TypeToken<T>
 
-fun <T : Any> erasedComp(main: KClass<T>, vararg params: KClass<*>): TypeToken<T> = CompositeTypeToken(erased(main), *params.map { erased(it) }.toTypedArray())
+fun <T : Any> erasedComp(main: KClass<T>, vararg params: KClass<*>): TypeToken<T> =
+        if (params.isEmpty()) erased(main)
+        else CompositeTypeToken(erased(main), *params.map { erased(it) }.toTypedArray())

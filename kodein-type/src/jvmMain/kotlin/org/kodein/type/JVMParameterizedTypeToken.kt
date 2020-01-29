@@ -2,7 +2,7 @@ package org.kodein.type
 
 import java.lang.reflect.*
 
-internal class JVMParameterizedTypeToken<T>(val trueType: Type) : JVMTypeToken<T>() {
+internal class JVMParameterizedTypeToken<T>(private val trueType: Type) : JVMTypeToken<T>() {
     private var _type: Type? = null
 
     override fun simpleErasedDispString() = trueType.simpleErasedName()

@@ -9,7 +9,7 @@ package org.kodein.type
  * CompositeTypeToken(erased<Map<*, *>>(), erased<String>(), CompositeTypeToken(erased<List<*>(), erased<String>()))
  * ```
  *
- * Note that you should rather use the [erasedComp1], [erasedComp2] or [erasedComp3] functions to create a composite type token.
+ * Note that you should rather use the [erasedComp] function to create a composite type token.
  *
  * @param T The main type represented by this type token.
  * @property main The main type represented by this type token.

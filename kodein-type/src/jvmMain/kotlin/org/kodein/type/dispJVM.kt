@@ -20,8 +20,8 @@ private abstract class TypeStringer {
             }
             is WildcardType -> when {
                 jvmType.lowerBounds.isNotEmpty() -> "in " + dispString(jvmType.lowerBounds[0])
-                jvmType.upperBounds.isNotEmpty() -> when {
-                    jvmType.upperBounds[0] == Any::class.java -> "*"
+                jvmType.upperBounds.isNotEmpty() -> when(jvmType.upperBounds[0]) {
+                    Any::class.java -> "*"
                     else -> "out " + dispString(jvmType.upperBounds[0])
                 }
                 else -> "*"

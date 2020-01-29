@@ -23,6 +23,7 @@ actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken(typeOf<T
 /**
  * Gives a [TypeToken] representing the given type.
  */
+@Suppress("RemoveExplicitTypeArguments")
 fun typeToken(type: KType): TypeToken<*> =
         if (type.arguments.isEmpty()) JSKClassTypeToken<Any>(type.classifier as KClass<*>)
         else JSKTypeTypeToken<Any>(type)
