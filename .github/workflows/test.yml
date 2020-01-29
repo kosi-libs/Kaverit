@@ -1,0 +1,44 @@
+name: Test
+
+on:
+  push:
+    branches-ignore:
+      - stable
+      - master
+      - '[0-9]+.[0-9]+'
+      - 'snapshot/[0-9]+.[0-9]+'
+  pull_request:
+    branches: ['**']
+
+jobs:
+  test-unix:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build
+        run: ./gradlew assemble
+        shell: bash
+      - name: Test
+        run: ./gradlew check -x jsTest
+        shell: bash
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build
+        run: ./gradlew assemble
+        shell: bash
+      - name: Test
+        run: ./gradlew check
+        shell: bash
