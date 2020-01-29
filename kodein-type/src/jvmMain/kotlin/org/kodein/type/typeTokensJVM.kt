@@ -8,10 +8,9 @@ actual fun <T : Any> erasedOf(obj: T): TypeToken<out T> = JVMClassTypeToken(obj.
 
 actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = JVMClassTypeToken(cls.java)
 
-fun <T> erased(jCls: Class<T>): TypeToken<T> = JVMClassTypeToken(jCls)
+actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
 
-@Suppress("UNCHECKED_CAST")
-actual inline fun <reified T> erased(): TypeToken<T> = JVMClassTypeToken(T::class.java)
+fun <T> erased(jCls: Class<T>): TypeToken<T> = JVMClassTypeToken(jCls)
 
 /**
  * Class used to get a generic type at runtime.
@@ -35,7 +34,7 @@ internal abstract class TypeReference<T> {
  * @return The type object representing `T`.
  */
 @Suppress("UNCHECKED_CAST")
-actual inline fun <reified T> generic(): TypeToken<T> = typeToken((object : TypeReference<T>() {}).superType) as TypeToken<T>
+actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken((object : TypeReference<T>() {}).superType) as TypeToken<T>
 
 /**
  * Gives a [TypeToken] representing the given type.

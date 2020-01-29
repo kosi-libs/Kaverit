@@ -116,7 +116,7 @@ abstract class TypeToken<T> {
 
     companion object {
         val Unit = erased<Unit>()
-        val Any = erased<Any?>()
+        val Any = erased<Any>()
     }
 
 }

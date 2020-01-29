@@ -1,6 +1,5 @@
 package org.kodein.type
 
-@PublishedApi
 internal class JVMClassTypeToken<T>(override val jvmType: Class<T>) : JVMTypeToken<T>() {
 
     override fun simpleErasedDispString() = jvmType.simpleErasedName()

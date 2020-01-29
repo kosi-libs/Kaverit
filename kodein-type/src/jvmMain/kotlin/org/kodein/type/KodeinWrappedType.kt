@@ -10,7 +10,7 @@ import java.lang.reflect.*
  *
  * @property type The type object to wrap.
  */
-class KodeinWrappedType(val type: Type) : Type {
+internal class KodeinWrappedType(val type: Type) : Type {
 
     @Suppress("unused")
     private abstract class WrappingTest<T> {

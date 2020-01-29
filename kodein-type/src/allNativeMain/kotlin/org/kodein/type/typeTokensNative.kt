@@ -14,8 +14,7 @@ actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = NativeKClassTypeToke
 fun <T> erased(oClass: ObjCClass): TypeToken<T> = NativeKClassTypeToken(getOriginalKotlinClass(oClass) ?: error("$oClass is not a Kotlin class"))
 fun <T> erased(oProtocol: ObjCProtocol): TypeToken<T> = NativeKClassTypeToken(getOriginalKotlinClass(oProtocol) ?: error("$oProtocol is not a Kotlin interface"))
 
-@Suppress("UNCHECKED_CAST")
-actual inline fun <reified T> erased(): TypeToken<T> = NativeKClassTypeToken(T::class)
+actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
 
 /**
  * Function used to get a generic type at runtime.
@@ -25,7 +24,7 @@ actual inline fun <reified T> erased(): TypeToken<T> = NativeKClassTypeToken(T::
  */
 @UseExperimental(ExperimentalStdlibApi::class)
 @Suppress("UNCHECKED_CAST")
-actual inline fun <reified T> generic(): TypeToken<T> = typeToken(typeOf<T>()) as TypeToken<T>
+actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken(typeOf<T>()) as TypeToken<T>
 
 /**
  * Gives a [TypeToken] representing the given type.

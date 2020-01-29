@@ -8,8 +8,7 @@ actual fun <T : Any> erasedOf(obj: T): TypeToken<out T> = JSKClassTypeToken(obj:
 
 actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = JSKClassTypeToken(cls)
 
-@Suppress("UNCHECKED_CAST")
-actual inline fun <reified T> erased(): TypeToken<T> = JSKClassTypeToken(T::class)
+actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
 
 /**
  * Function used to get a generic type at runtime.
@@ -19,7 +18,7 @@ actual inline fun <reified T> erased(): TypeToken<T> = JSKClassTypeToken(T::clas
  */
 @UseExperimental(ExperimentalStdlibApi::class)
 @Suppress("UNCHECKED_CAST")
-actual inline fun <reified T> generic(): TypeToken<T> = typeToken(typeOf<T>()) as TypeToken<T>
+actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken(typeOf<T>()) as TypeToken<T>
 
 /**
  * Gives a [TypeToken] representing the given type.
