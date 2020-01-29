@@ -18,3 +18,8 @@ kodein {
         }
     }
 }
+
+kodeinUpload {
+    name = "Kodein-Type"
+    description = "Kodein Type System"
+}
