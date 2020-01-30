@@ -2,7 +2,7 @@ package org.kodein.type
 
 import java.lang.reflect.Type
 
-internal abstract class JVMTypeToken<T> : TypeToken<T>() {
+internal abstract class JVMAbstractTypeToken<T> : TypeToken<T>() {
 
     abstract val jvmType: Type
 
@@ -10,7 +10,7 @@ internal abstract class JVMTypeToken<T> : TypeToken<T>() {
     override fun qualifiedDispString() = jvmType.qualifiedDispString()
 
     final override fun typeEquals(other: TypeToken<*>): Boolean {
-        require(other is JVMTypeToken<*>)
+        require(other is JVMAbstractTypeToken<*>)
         if (jvmType != other.jvmType) return false
         return true
     }

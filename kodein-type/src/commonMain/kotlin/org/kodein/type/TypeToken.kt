@@ -68,7 +68,7 @@ abstract class TypeToken<T> {
      * Determines if the type represented by this type object is either the same as, or is a superclass or superinterface of, the type represented by the specified type parameter.
      */
     open fun isAssignableFrom(typeToken: TypeToken<*>): Boolean {
-        if (this == typeToken || this == Unit)
+        if (this == typeToken || this == Any)
             return true
 
         val raw = getRaw()

@@ -5,29 +5,28 @@ import java.lang.reflect.*
 private abstract class TypeStringer {
 
     fun dispString(type: Type, skipStars: Boolean = false): String {
-        return when (val jvmType = type.javaType) {
-            is Class<*> -> dispName(jvmType, skipStars)
+        return when (type) {
+            is Class<*> -> dispName(type, skipStars)
             is ParameterizedType -> {
-                val cls = jvmType.rawType as Class<*>
-                val arguments = cls.typeParameters.mapIndexed { i, variable ->
-                    val argument = jvmType.actualTypeArguments[i]
+                val arguments = type.rawClass.typeParameters.mapIndexed { i, variable ->
+                    val argument = type.actualTypeArguments[i]
                     if (argument is WildcardType && variable.bounds.any { it in argument.upperBounds })
                         "*"
                     else
                         dispString(argument)
                 }
-                dispString(jvmType.rawType, true) + "<" + arguments.joinToString(", ") + ">"
+                dispString(type.rawClass, true) + "<" + arguments.joinToString(", ") + ">"
             }
             is WildcardType -> when {
-                jvmType.lowerBounds.isNotEmpty() -> "in " + dispString(jvmType.lowerBounds[0])
-                jvmType.upperBounds.isNotEmpty() -> when(jvmType.upperBounds[0]) {
+                type.lowerBounds.isNotEmpty() -> "in " + dispString(type.lowerBounds[0])
+                type.upperBounds.isNotEmpty() -> when(type.upperBounds[0]) {
                     Any::class.java -> "*"
-                    else -> "out " + dispString(jvmType.upperBounds[0])
+                    else -> "out " + dispString(type.upperBounds[0])
                 }
                 else -> "*"
             }
-            is GenericArrayType -> "Array<" + dispString(jvmType.genericComponentType) + ">"
-            is TypeVariable<*> -> jvmType.name
+            is GenericArrayType -> "Array<" + dispString(type.genericComponentType) + ">"
+            is TypeVariable<*> -> type.name
             else -> throw IllegalStateException("Unknown type $javaClass")
         }
     }
@@ -120,12 +119,12 @@ fun Type.qualifiedDispString(): String = QualifiedTypeStringer.dispString(this)
  * Returns the erased name of a type (e.g. the type name without it's generic parameters).
  */
 fun Type.simpleErasedName(): String {
-    return when (val jvmType = javaType) {
-        is Class<*> -> (jvmType.enclosingClass?.simpleErasedName()?.plus(".") ?: "") + jvmType.simpleName
-        is ParameterizedType -> jvmType.rawType.simpleErasedName()
-        is GenericArrayType -> jvmType.genericComponentType.simpleErasedName()
+    return when (this) {
+        is Class<*> -> (enclosingClass?.simpleErasedName()?.plus(".") ?: "") + simpleName
+        is ParameterizedType -> rawClass.simpleErasedName()
+        is GenericArrayType -> genericComponentType.simpleErasedName()
         is WildcardType -> "*"
-        is TypeVariable<*> -> jvmType.name
+        is TypeVariable<*> -> name
         else -> throw IllegalArgumentException("Unknown type $javaClass $this")
     }
 }
@@ -134,12 +133,12 @@ fun Type.simpleErasedName(): String {
  * Returns the fully qualified erased name of a type (e.g. the type name without it's generic parameters).
  */
 fun Type.qualifiedErasedName(): String {
-    return when (val jvmType = javaType) {
-        is Class<*> -> jvmType.canonicalName.magic()
-        is ParameterizedType -> jvmType.rawType.qualifiedErasedName()
-        is GenericArrayType -> jvmType.genericComponentType.qualifiedErasedName()
+    return when (this) {
+        is Class<*> -> canonicalName.magic()
+        is ParameterizedType -> rawClass.qualifiedErasedName()
+        is GenericArrayType -> genericComponentType.qualifiedErasedName()
         is WildcardType -> "*"
-        is TypeVariable<*> -> jvmType.name
+        is TypeVariable<*> -> name
         else -> throw IllegalArgumentException("Unknown type $javaClass $this")
     }
 }

@@ -1,6 +1,6 @@
 package org.kodein.type
 
-internal class JVMClassTypeToken<T>(override val jvmType: Class<T>) : JVMTypeToken<T>() {
+internal class JVMClassTypeToken<T>(override val jvmType: Class<T>) : JVMAbstractTypeToken<T>() {
 
     override fun simpleErasedDispString() = jvmType.simpleErasedName()
     override fun qualifiedErasedDispString() = jvmType.qualifiedErasedName()
@@ -12,7 +12,8 @@ internal class JVMClassTypeToken<T>(override val jvmType: Class<T>) : JVMTypeTok
     override fun isGeneric() = false
     override fun isWildcard() = true
 
-    override fun getSuper() = (jvmType.superTypeToken()?.let { listOf(it) } ?: emptyList()) + jvmType.genericInterfaces.map { typeToken(it) }
+    override fun getSuper() = (jvmType.boundedGenericSuperClass?.takeIf { it != Object::class.java }?.let { listOf(typeToken(it)) } ?: emptyList()) +
+            jvmType.genericInterfaces.map { typeToken(it) }
 
     override fun isAssignableFrom(typeToken: TypeToken<*>): Boolean {
         return if (typeToken is JVMClassTypeToken)

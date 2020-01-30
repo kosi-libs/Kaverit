@@ -34,7 +34,7 @@ internal class CompositeTypeToken<T>(val main: TypeToken<T>, vararg val params: 
 
     override fun isGeneric() = true
 
-    override fun isWildcard() = false
+    override fun isWildcard() = params.all { it == Any }
 
     override fun getSuper() = main.getSuper()
 

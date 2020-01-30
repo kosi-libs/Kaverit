@@ -2,76 +2,31 @@ package org.kodein.type
 
 import java.lang.reflect.*
 
-internal class JVMParameterizedTypeToken<T>(private val trueType: Type) : JVMTypeToken<T>() {
-    private var _type: Type? = null
+internal class JVMParameterizedTypeToken<T>(override val jvmType: ParameterizedType) : JVMAbstractTypeToken<T>() {
+    override fun simpleErasedDispString() = jvmType.simpleErasedName()
 
-    override fun simpleErasedDispString() = trueType.simpleErasedName()
-
-    override fun qualifiedErasedDispString() = trueType.qualifiedErasedName()
-
-    private val rawType: Class<*>? get() =
-        when (trueType) {
-            is Class<*> -> trueType
-            is ParameterizedType -> trueType.rawType as Class<*>
-            else -> null
-        }
+    override fun qualifiedErasedDispString() = jvmType.qualifiedErasedName()
 
     override fun getGenericParameters(): Array<TypeToken<*>> {
-        val type = _type as? ParameterizedType
-                ?: return rawType?.typeParameters?.map { typeToken(it.bounds[0]) } ?.toTypedArray() ?: emptyArray()
-        return type.actualTypeArguments.map {
-            if (it is WildcardType)
-                typeToken(it.upperBounds[0])
-            else
-                typeToken(it)
-        }.toTypedArray()
-    }
-
-    override val jvmType: Type = _type ?: run {
-        // TypeReference cannot create WildcardTypes nor TypeVariables
-        when {
-            KodeinWrappedType.IsNeeded.forParameterizedType.not() && KodeinWrappedType.IsNeeded.forGenericArray.not() -> trueType
-            trueType is Class<*> -> trueType
-            KodeinWrappedType.IsNeeded.forParameterizedType && trueType is ParameterizedType -> KodeinWrappedType(trueType)
-            KodeinWrappedType.IsNeeded.forGenericArray && trueType is GenericArrayType -> KodeinWrappedType(trueType)
-            else -> trueType
-        }.also { _type = it }
+        return jvmType.actualTypeArguments.map { typeToken(it) }.toTypedArray()
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun getRaw(): TypeToken<T>? {
-        return rawType?.let { JVMClassTypeToken(it as Class<T>) }
-    }
+    override fun getRaw(): TypeToken<T> = JVMClassTypeToken(jvmType.rawClass) as TypeToken<T>
 
     override fun isGeneric() = true
 
-    @Suppress("UNCHECKED_CAST")
     override fun isWildcard(): Boolean {
-        val realType = trueType as? ParameterizedType ?: return false
-
-        var hasWildCard = false
-        var hasSpecific = false
-
-        val cls = realType.rawType as Class<*>
-        cls.typeParameters.forEachIndexed { i, variable ->
-            val argument = realType.actualTypeArguments[i]
-
-            if (argument is WildcardType && variable.bounds.any { it in argument.upperBounds })
-                hasWildCard = true
-            else
-                hasSpecific = true
+        jvmType.rawClass.typeParameters.forEachIndexed { i, variable ->
+            val argument = jvmType.actualTypeArguments[i]
+            if (!(argument == Object::class.java || (argument is WildcardType && variable.bounds.all { it in argument.upperBounds })))
+                return false
         }
-
-        return hasWildCard && !hasSpecific
+        return true
     }
 
-    @Suppress("UNCHECKED_CAST")
-    override fun getSuper(): List<TypeToken<*>> {
-        val extends = when (val jvmType = jvmType) {
-            is ParameterizedType -> (jvmType.rawType as Class<T>).superTypeToken()
-            else -> null
-        }
-        val implements = rawType?.genericInterfaces?.map { typeToken(it) } ?: emptyList()
-        return (extends?.let { listOf(it) } ?: emptyList()) + implements
-    }
+    override fun getSuper(): List<TypeToken<*>> =
+            ((jvmType.rawClass.genericSuperclass ?: (jvmType.rawClass.superclass as Class<*>?))?.takeIf { it != Object::class.java } ?.let { listOf(typeToken(jvmType.reify(it))) } ?: emptyList()) +
+                    jvmType.rawClass.genericInterfaces.map { typeToken(jvmType.reify(it)) }
+
 }

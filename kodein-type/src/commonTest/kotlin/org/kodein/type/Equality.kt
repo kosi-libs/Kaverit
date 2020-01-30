@@ -22,8 +22,8 @@ class Equality {
     }
 
     @Test fun test02_composite() {
-        assertEquals<TypeToken<*>>(erasedComp(Map::class, String::class, String::class), erasedComp(Map::class, String::class, String::class))
-        assertNotEquals<TypeToken<*>>(erasedComp(Map::class, String::class, String::class), erasedComp(Map::class, String::class, Int::class))
+        assertEquals<TypeToken<*>>(erasedComp(Map::class, erased(String::class), erased(String::class)), erasedComp(Map::class, erased(String::class), erased(String::class)))
+        assertNotEquals<TypeToken<*>>(erasedComp(Map::class, erased(String::class), erased(String::class)), erasedComp(Map::class, erased(String::class), erased(Int::class)))
         assertEquals(erasedComp(String::class), erased<String>())
     }
 
@@ -37,12 +37,12 @@ class Equality {
     }
 
     @Test fun test04_genericEqualsComposite() {
-        assertEquals<TypeToken<*>>(generic<Map<String, String>>(), erasedComp(Map::class, String::class, String::class))
-        assertEquals<TypeToken<*>>(erasedComp(Map::class, String::class, String::class), generic<Map<String, String>>())
-        assertNotEquals<TypeToken<*>>(generic<Map<String, String>>(), erasedComp(Map::class, String::class, Int::class))
-        assertNotEquals<TypeToken<*>>(erasedComp(Map::class, String::class, Int::class), generic<Map<String, String>>())
-        assertEquals<TypeToken<*>>(generic<Map<String, *>>(), erasedComp(Map::class, String::class, Any::class))
-        assertEquals<TypeToken<*>>(erasedComp(Map::class, String::class, Any::class), generic<Map<String, *>>())
+        assertEquals<TypeToken<*>>(generic<Map<String, String>>(), erasedComp(Map::class, erased(String::class), erased(String::class)))
+        assertEquals<TypeToken<*>>(erasedComp(Map::class, erased(String::class), erased(String::class)), generic<Map<String, String>>())
+        assertNotEquals<TypeToken<*>>(generic<Map<String, String>>(), erasedComp(Map::class, erased(String::class), erased(Int::class)))
+        assertNotEquals<TypeToken<*>>(erasedComp(Map::class, erased(String::class), erased(Int::class)), generic<Map<String, String>>())
+        assertEquals<TypeToken<*>>(generic<Map<String, *>>(), erasedComp(Map::class, erased(String::class), TypeToken.Any))
+        assertEquals<TypeToken<*>>(erasedComp(Map::class, erased(String::class), TypeToken.Any), generic<Map<String, *>>())
     }
 
     @Test fun test05_erasedOf() {

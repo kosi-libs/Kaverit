@@ -1,11 +1,13 @@
 package org.kodein.type
 
 import org.junit.Test
+import java.lang.reflect.GenericArrayType
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.WildcardType
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class JavaType {
 
