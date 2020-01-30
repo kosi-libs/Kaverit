@@ -55,7 +55,10 @@ internal fun Type.typeEquals(other: Type): Boolean {
         is Class<*> -> this == other
         is ParameterizedType -> {
             if (other !is ParameterizedType) return false
-            rawClass.typeEquals(other.rawClass) && actualTypeArguments.allTypeEquals(other.actualTypeArguments)
+            rawClass.typeEquals(other.rawClass) && (
+                    actualTypeArguments.allTypeEquals(other.actualTypeArguments)
+                ||  boundedTypeArguments().allTypeEquals(other.boundedTypeArguments())
+            )
         }
         is WildcardType -> {
             if (other !is WildcardType) return false
@@ -72,6 +75,9 @@ internal fun Type.typeEquals(other: Type): Boolean {
         else -> this == other
     }
 }
+
+private fun ParameterizedType.boundedTypeArguments() =
+        actualTypeArguments.map { if (it is WildcardType) it.upperBounds.firstOrNull() ?: Any::class.java else it } .toTypedArray()
 
 private fun Array<Type>.allTypeEquals(other: Array<Type>): Boolean {
     if (size != other.size) return false

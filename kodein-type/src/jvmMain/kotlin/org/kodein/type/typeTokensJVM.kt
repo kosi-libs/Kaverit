@@ -13,6 +13,17 @@ actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = JVMClassTypeToken(cl
 
 actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
 
+private val boxes = mapOf(
+        Boolean::class.java to java.lang.Boolean::class.java,
+        Byte::class.java to Byte::class.java,
+        Char::class.java to java.lang.Character::class.java,
+        Short::class.java to java.lang.Short::class.java,
+        Int::class.java to java.lang.Integer::class.java,
+        Long::class.java to java.lang.Long::class.java,
+        Float::class.java to java.lang.Float::class.java,
+        Double::class.java to java.lang.Double::class.java
+)
+
 actual fun <T : Any> erasedComp(main: KClass<T>, vararg params: TypeToken<*>): TypeToken<T> {
     require(main.java.typeParameters.size == params.size) { "Got ${params.size} type parameters, but ${main.java} takes ${main.java.typeParameters.size} parameters." }
 
@@ -21,7 +32,9 @@ actual fun <T : Any> erasedComp(main: KClass<T>, vararg params: TypeToken<*>): T
     return JVMParameterizedTypeToken(
             ParameterizedTypeImpl(
                     main.java,
-                    params.map { it.jvmType } .toTypedArray(),
+                    params.map {
+                        it.jvmType.takeIf { it is Class<*> && it.isPrimitive } ?.let { boxes[it] } ?: it.jvmType
+                    } .toTypedArray(),
                     main.java.enclosingClass
             )
     )

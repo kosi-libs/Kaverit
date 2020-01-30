@@ -18,11 +18,7 @@ internal class ParameterizedTypeImpl(private val rawType: Class<*>, private val 
         if (other == null || other !is Type)
             return false
 
-        if (typeEquals(other)) return true
-
-        if (other !is ParameterizedType) return false
-
-        return bind(this).typeEquals(bind(other))
+        return typeEquals(other)
     }
 
     /** @suppress */
@@ -43,11 +39,5 @@ internal class ParameterizedTypeImpl(private val rawType: Class<*>, private val 
         operator fun invoke(type: ParameterizedType) =
                 if (type is ParameterizedTypeImpl) type
                 else ParameterizedTypeImpl(type.rawClass, type.actualTypeArguments.map { it.kodein() } .toTypedArray(), type.ownerType.kodein())
-
-        private fun bind(type: ParameterizedType) = ParameterizedTypeImpl(
-                type.rawClass,
-                type.actualTypeArguments.map { if (it is WildcardType) it.upperBounds.firstOrNull() ?: Any::class.java else it } .toTypedArray(),
-                type.ownerType
-        )
     }
 }
