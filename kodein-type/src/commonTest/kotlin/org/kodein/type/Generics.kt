@@ -8,15 +8,15 @@ import kotlin.test.assertTrue
 class Generics {
 
     @Test fun test00_genericReifiedParameter() {
-        val tt = generic<List<String>>()
-        assertEquals(1, tt.getGenericParameters().size)
-        assertEquals(erased<String>(), tt.getGenericParameters()[0])
+        val typeToken = generic<List<String>>()
+        assertEquals(1, typeToken.getGenericParameters().size)
+        assertEquals(erased<String>(), typeToken.getGenericParameters()[0])
     }
 
     @Test fun test01_genericStarParameter() {
-        val tt = generic<List<*>>()
-        assertEquals(1, tt.getGenericParameters().size)
-        assertEquals(TypeToken.Any, tt.getGenericParameters()[0])
+        val typeToken = generic<List<*>>()
+        assertEquals(1, typeToken.getGenericParameters().size)
+        assertEquals(TypeToken.Any, typeToken.getGenericParameters()[0])
     }
 
     @Test fun test02_genericRaw() {
