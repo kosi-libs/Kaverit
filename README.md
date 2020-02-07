@@ -1,3 +1,5 @@
+![Release](https://github.com/Kodein-Framework/Kodein-Type/workflows/Release/badge.svg)
+
 Kodein-Type
 ===========
 
