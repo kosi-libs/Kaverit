@@ -16,7 +16,7 @@ actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
  * @param T The type to get.
  * @return The type object representing `T`.
  */
-@UseExperimental(ExperimentalStdlibApi::class)
+@OptIn(ExperimentalStdlibApi::class)
 @Suppress("UNCHECKED_CAST")
 actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken(typeOf<T>()) as TypeToken<T>
 
