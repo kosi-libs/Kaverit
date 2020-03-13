@@ -2,7 +2,6 @@ package org.kodein.type
 
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
-import java.lang.reflect.WildcardType
 
 internal class ParameterizedTypeImpl(private val rawType: Class<*>, private val args: Array<Type>, private val ownerType: Type?) : ParameterizedType {
 

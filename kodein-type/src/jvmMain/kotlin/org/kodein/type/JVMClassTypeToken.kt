@@ -12,8 +12,8 @@ internal class JVMClassTypeToken<T>(override val jvmType: Class<T>) : JVMAbstrac
     override fun isGeneric() = false
     override fun isWildcard() = true
 
-    override fun getSuper() = (jvmType.boundedGenericSuperClass?.takeIf { it != Object::class.java }?.let { listOf(typeToken(it)) } ?: emptyList()) +
-            jvmType.genericInterfaces.map { typeToken(it) }
+    override fun getSuper() = (jvmType.boundedGenericSuperClass?.takeIf { it != Object::class.java }?.let { listOf(typeToken(it.removeVariables())) } ?: emptyList()) +
+            jvmType.genericInterfaces.map { typeToken(it.removeVariables()) }
 
     override fun isAssignableFrom(typeToken: TypeToken<*>): Boolean {
         return if (typeToken is JVMClassTypeToken)

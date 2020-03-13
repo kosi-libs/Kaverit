@@ -1,10 +1,7 @@
 package org.kodein.type
 
 import java.lang.UnsupportedOperationException
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
-import java.lang.reflect.TypeVariable
-import java.lang.reflect.WildcardType
+import java.lang.reflect.*
 import kotlin.reflect.KClass
 
 actual fun <T : Any> erasedOf(obj: T): TypeToken<out T> = JVMClassTypeToken(obj.javaClass)
@@ -66,13 +63,23 @@ internal abstract class TypeReference<T> {
 @Suppress("UNCHECKED_CAST")
 actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken((object : TypeReference<T>() {}).superType) as TypeToken<T>
 
+private val Type.isReified: Boolean get() =
+    when (this) {
+        is Class<*> -> true
+        is ParameterizedType -> actualTypeArguments.all { it.isReified }
+        is GenericArrayType -> genericComponentType.isReified
+        is WildcardType -> lowerBounds.all { it.isReified } && upperBounds.all { it.isReified }
+        is TypeVariable<*> -> false
+        else -> throw IllegalArgumentException("Unknown type $this")
+    }
+
 /**
  * Gives a [TypeToken] representing the given type.
  */
 fun typeToken(type: Type): TypeToken<*> =
         when (val k = type.kodein()) {
             is Class<*> -> JVMClassTypeToken(k)
-            is ParameterizedType -> JVMParameterizedTypeToken<Any>(k)
+            is ParameterizedType -> JVMParameterizedTypeToken<Any>(k.also { require(it.isReified) { "Cannot create TypeToken for non fully reified type $k" } })
             is WildcardType -> typeToken(k.upperBounds[0])
             is TypeVariable<*> -> typeToken(k.firstBound)
             else -> throw UnsupportedOperationException("Unsupported type ${k.javaClass.name}: $k")

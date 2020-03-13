@@ -28,6 +28,18 @@ internal fun ParameterizedType.reify(parent: Type): Type {
     )
 }
 
+internal fun Type.removeVariables(): Type {
+    if (this !is ParameterizedType) return this
+    return ParameterizedTypeImpl(
+            rawClass,
+            actualTypeArguments.map { arg ->
+                if (arg is TypeVariable<*>) Any::class.java
+                else arg.kodein()
+            } .toTypedArray(),
+            ownerType.kodein()
+    )
+}
+
 internal val TypeVariable<*>.firstBound: Type get() =
         (bounds[0] as? TypeVariable<*>)?.firstBound ?: bounds[0]
 
