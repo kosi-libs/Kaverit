@@ -21,14 +21,10 @@ jobs:
         run: echo excludeTargets = jvm,js >> gradle.properties
         shell: bash
       - name: Assemble
-        run: |
-          ./gradlew :kodein-di:assemble
-          ./gradlew :kodein-di-conf:assemble
+        run: ./gradlew assemble
         shell: bash
       - name: Test
-        run: |
-          ./gradlew :kodein-di:check
-          ./gradlew :kodein-di-conf:check
+        run: ./gradlew check
         shell: bash
       - name: Upload to Bintray
         env:
@@ -36,8 +32,7 @@ jobs:
           BINTRAY_APIKEY: ${{ secrets.BINTRAY_APIKEY }}
           BINTRAY_USER_ORG: ${{ secrets.BINTRAY_USER_ORG }}
         run: |
-          ./gradlew :kodein-di:bintrayUpload
-          ./gradlew :kodein-di-conf:bintrayUpload
+          ./gradlew bintrayUpload
         shell: bash
   jvm-and-js:
     runs-on: ubuntu-latest
