@@ -10,7 +10,7 @@ buildscript {
 
 allprojects {
     group = "org.kodein.type"
-    version = "1.1.0"
+    version = "1.2.0"
 }
 
 kodeinPublications {
