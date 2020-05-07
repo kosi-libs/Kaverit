@@ -23,8 +23,8 @@ jobs:
         with:
           java-version: 11
       - name: Assemble
-        run: ./gradlew assemble
+        run: ./gradlew assemble --stacktrace
         shell: bash
       - name: Test
-        run: ./gradlew check
+        run: ./gradlew check --stacktrace
         shell: bash
