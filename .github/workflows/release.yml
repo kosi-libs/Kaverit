@@ -5,7 +5,7 @@ on:
     types: [published]
 
 jobs:
-  native-all:
+  publish-all:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -16,17 +16,16 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Assemble
-        run: ./gradlew assemble --stacktrace
-        shell: bash
-      - name: Test
-        run: ./gradlew check --stacktrace
-        shell: bash
-      - name: Upload to Bintray
+      - name: Publish
         env:
-          BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
-          BINTRAY_APIKEY: ${{ secrets.BINTRAY_APIKEY }}
-          BINTRAY_USER_ORG: ${{ secrets.BINTRAY_USER_ORG }}
+          BINTRAY_USER: ${{ secrets.bintray_user }}
+          BINTRAY_APIKEY: ${{ secrets.bintray_apikey }}
+          BINTRAY_USER_ORG: ${{ secrets.bintray_user_org }}
         run: |
-          ./gradlew publish --stacktrace
+          if [ "$RUNNER_OS" == "Windows" ]
+          then
+             ./gradlew publishMingwX64PublicationToBintrayRepository
+          else
+             ./gradlew publish
+          fi
         shell: bash
