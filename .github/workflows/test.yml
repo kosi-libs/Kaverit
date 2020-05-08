@@ -1,17 +1,18 @@
-name: Build and test
+name: assemble and check
 
 on:
   push:
     branches-ignore:
-      - stable
       - master
       - '[0-9]+.[0-9]+'
       - 'snapshot/[0-9]+.[0-9]+'
   pull_request:
-    branches: ['**']
+    - stable
+    - master
+
 
 jobs:
-  native-all:
+  build-check-all:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -23,8 +24,10 @@ jobs:
         with:
           java-version: 11
       - name: Assemble
-        run: ./gradlew assemble --stacktrace
-        shell: bash
-      - name: Test
-        run: ./gradlew check --stacktrace
-        shell: bash
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: assemble
+      - name: Check
+        uses: eskatos/gradle-command-action@v1
+        with:
+          arguments: check
