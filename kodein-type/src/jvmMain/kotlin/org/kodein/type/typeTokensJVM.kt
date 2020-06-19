@@ -80,6 +80,7 @@ fun typeToken(type: Type): TypeToken<*> =
         when (val k = type.kodein()) {
             is Class<*> -> JVMClassTypeToken(k)
             is ParameterizedType -> JVMParameterizedTypeToken<Any>(k.also { require(it.isReified) { "Cannot create TypeToken for non fully reified type $k" } })
+            is GenericArrayType -> JVMGenericArrayTypeToken(k)
             is WildcardType -> typeToken(k.upperBounds[0])
             is TypeVariable<*> -> typeToken(k.firstBound)
             else -> throw UnsupportedOperationException("Unsupported type ${k.javaClass.name}: $k")
