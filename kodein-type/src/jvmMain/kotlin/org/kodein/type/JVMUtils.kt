@@ -14,19 +14,88 @@ val TypeToken<*>.jvmType: Type get() =
 
 internal val ParameterizedType.rawClass get() = rawType as Class<*>
 
-internal fun ParameterizedType.reify(parent: Type): Type {
+@OptIn(ExperimentalStdlibApi::class)
+internal fun ParameterizedType.reify(parent: Type, originType: ParameterizedType? = null, realTypeArguments: Array<Type>? = null): Type {
     if (parent !is ParameterizedType) return parent
+
+    /* Keep the reference to the encapsulating type
+        e.g. for Set<Map<Int, String>>
+        _originType -> Set<? extends T>
+        _originRawClass -> java.util.Set
+        _realTypeArguments -> [Int, String]
+     */
+    val _originType = originType ?: this
+    val _originRawClass = originType?.rawClass ?: rawClass
+    val _realTypeArguments = realTypeArguments ?: actualTypeArguments
 
     return ParameterizedTypeImpl(
             parent.rawClass,
-            parent.actualTypeArguments.map { arg ->
-                (arg as? TypeVariable<*>)?.run {
-                    rawClass.typeParameters.indexOf(arg).takeIf { it >= 0 } ?.let { actualTypeArguments[it].kodein() }
-                } ?: arg.kodein()
+            buildList {
+                parent.actualTypeArguments.forEach { arg ->
+                    when (arg) {
+                        /* In case the type argument is TypeVariable
+                            e.g. T, E, V, K...
+                         */
+                        is TypeVariable<*> -> {
+                            _originRawClass.typeParameters.indexOf(arg).takeIf { it >= 0 }?.let {
+                                add((_realTypeArguments)[it].kodein())
+                            }
+                        }
+                        /* In case the type argument is WildcardType
+                            and first upperBounds extends a ParameterizedType or TypeVariable
+                            e.g. ? extends Set, ? extends Map, ? extends T, ? extends V...
+                         */
+                        is WildcardType -> {
+                            arg.upperBounds[0]?.also { upperBound ->
+                                when (upperBound) {
+                                    is ParameterizedType -> {
+                                        add(upperBound.reify(upperBound, _originType, _realTypeArguments))
+                                    }
+                                    is TypeVariable<*> -> {
+                                        _originRawClass.typeParameters.indexOf(upperBound)
+                                            .takeIf { it >= 0 }?.let {
+                                                add((_realTypeArguments)[it].kodein())
+                                            }
+                                    }
+                                }
+                            }
+                        }
+                        /* In case the type argument is ParameterizedType
+                            e.g. Set<? extends E>
+                         */
+                        is ParameterizedType -> add(arg.reify(arg, _originType, _realTypeArguments))
+                        else -> add(arg.kodein())
+                    }
+                }
             } .toTypedArray(),
             parent.ownerType.kodein()
     )
 }
+
+//@OptIn(ExperimentalStdlibApi::class)
+//private fun Array<Type>.flatMapArgs(rawClass: Class<*>, actualTypeArguments: Array<Type>): Array<Type> {
+//    val l = mutableListOf<Type>()
+//
+//    forEach { arg ->
+//        when(arg) {
+//            is TypeVariable<*> -> arg.run {
+//                rawClass.typeParameters.indexOf(arg).takeIf { it >= 0 }
+//                        ?.let { l.add(actualTypeArguments[it].kodein()) }
+//            }
+//            is WildcardType ->  {
+//                if (arg.upperBounds[0] is ParameterizedType)
+//                    l.add((arg.upperBounds[0] as ParameterizedType).reify(arg.upperBounds[0],actualTypeArguments))
+//                else
+//                    l.add(actualTypeArguments[0].kodein())
+//            }
+//            is ParameterizedType -> l.add(arg.reify(arg, actualTypeArguments))
+//            else -> l.add(arg.kodein())
+//        }
+//    }
+//
+//    return l.toTypedArray()
+//}
+
 
 internal fun Type.removeVariables(): Type {
     if (this !is ParameterizedType) return this
