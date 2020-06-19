@@ -12,7 +12,7 @@ actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
 
 private val boxes = mapOf(
         Boolean::class.java to java.lang.Boolean::class.java,
-        Byte::class.java to Byte::class.java,
+        Byte::class.java to java.lang.Byte::class.java,
         Char::class.java to java.lang.Character::class.java,
         Short::class.java to java.lang.Short::class.java,
         Int::class.java to java.lang.Integer::class.java,
