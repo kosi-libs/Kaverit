@@ -108,17 +108,17 @@ private fun String.magic(): String = when {
 /**
  * A string representing this type in a Kotlin-esque fashion using simple type names.
  */
-fun Type.simpleDispString(): String = SimpleTypeStringer.dispString(this)
+internal fun Type.simpleDispString(): String = SimpleTypeStringer.dispString(this)
 
 /**
  * A string representing this type in a Kotlin-esque fashion using full type names.
  */
-fun Type.qualifiedDispString(): String = QualifiedTypeStringer.dispString(this)
+internal fun Type.qualifiedDispString(): String = QualifiedTypeStringer.dispString(this)
 
 /**
  * Returns the erased name of a type (e.g. the type name without it's generic parameters).
  */
-fun Type.simpleErasedName(): String {
+internal fun Type.simpleErasedName(): String {
     return when (this) {
         is Class<*> -> (enclosingClass?.simpleErasedName()?.plus(".") ?: "") + simpleName
         is ParameterizedType -> rawClass.simpleErasedName()
@@ -132,7 +132,7 @@ fun Type.simpleErasedName(): String {
 /**
  * Returns the fully qualified erased name of a type (e.g. the type name without it's generic parameters).
  */
-fun Type.qualifiedErasedName(): String {
+internal fun Type.qualifiedErasedName(): String {
     return when (this) {
         is Class<*> -> canonicalName.magic()
         is ParameterizedType -> rawClass.qualifiedErasedName()

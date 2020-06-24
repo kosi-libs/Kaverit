@@ -7,16 +7,16 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-actual fun <T : Any> erasedOf(obj: T): TypeToken<out T> = NativeKClassTypeToken(obj::class)
+public actual fun <T : Any> erasedOf(obj: T): TypeToken<out T> = NativeKClassTypeToken(obj::class)
 
-actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = NativeKClassTypeToken(cls)
+public actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = NativeKClassTypeToken(cls)
 
 @Suppress("unused")
-fun <T> erased(oClass: ObjCClass): TypeToken<T> = NativeKClassTypeToken(getOriginalKotlinClass(oClass) ?: error("$oClass is not a Kotlin class"))
+public fun <T> erased(oClass: ObjCClass): TypeToken<T> = NativeKClassTypeToken(getOriginalKotlinClass(oClass) ?: error("$oClass is not a Kotlin class"))
 @Suppress("unused")
-fun <T> erased(oProtocol: ObjCProtocol): TypeToken<T> = NativeKClassTypeToken(getOriginalKotlinClass(oProtocol) ?: error("$oProtocol is not a Kotlin interface"))
+public fun <T> erased(oProtocol: ObjCProtocol): TypeToken<T> = NativeKClassTypeToken(getOriginalKotlinClass(oProtocol) ?: error("$oProtocol is not a Kotlin interface"))
 
-actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
+public actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
 
 /**
  * Function used to get a generic type at runtime.
@@ -26,12 +26,12 @@ actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
  */
 @OptIn(ExperimentalStdlibApi::class)
 @Suppress("UNCHECKED_CAST")
-actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken(typeOf<T>()) as TypeToken<T>
+public actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken(typeOf<T>()) as TypeToken<T>
 
 /**
  * Gives a [TypeToken] representing the given type.
  */
 @Suppress("RemoveExplicitTypeArguments")
-fun typeToken(type: KType): TypeToken<*> =
+public fun typeToken(type: KType): TypeToken<*> =
         if (type.arguments.isEmpty()) NativeKClassTypeToken<Any>(type.classifier as KClass<*>)
         else NativeKTypeTypeToken<Any>(type)

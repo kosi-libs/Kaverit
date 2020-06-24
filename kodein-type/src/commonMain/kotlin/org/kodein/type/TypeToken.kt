@@ -5,43 +5,43 @@ package org.kodein.type
  *
  * @param T The type represented by this object.
  */
-abstract class TypeToken<T> {
+public abstract class TypeToken<T> {
 
     /**
      * @return The simple (a.k.a. not fully qualified) name of the type represented by this TypeToken.
      */
-    abstract fun simpleDispString(): String
+    public abstract fun simpleDispString(): String
 
     /**
      * @return The simple (a.k.a. not fully qualified) erased (a.k.a without generic parameters) name of the type represented by this TypeToken.
      */
-    abstract fun simpleErasedDispString(): String
+    public abstract fun simpleErasedDispString(): String
 
     /**
      * @return The fully qualified name of the type represented by this TypeToken.
      */
-    abstract fun qualifiedDispString(): String
+    public abstract fun qualifiedDispString(): String
 
     /**
      * @return The fully qualified erased (a.k.a without generic parameters) name of the type represented by this TypeToken.
      */
-    abstract fun qualifiedErasedDispString(): String
+    public abstract fun qualifiedErasedDispString(): String
 
     /**
      * @return the raw type represented by this type.
      *   If this type is not generic, than it's raw type is itself.
      */
-    abstract fun getRaw(): TypeToken<T>?
+    public abstract fun getRaw(): TypeToken<T>?
 
     /**
      * @return Whether the type represented by this TypeToken is generic.
      */
-    abstract fun isGeneric(): Boolean
+    public abstract fun isGeneric(): Boolean
 
     /**
      * @return A list of generic parameters (empty if this types does not have generic parameters).
      */
-    abstract fun getGenericParameters(): Array<TypeToken<*>>
+    public abstract fun getGenericParameters(): Array<TypeToken<*>>
 
     /**
      * Returns whether the type represented by this TypeToken is generic and is entirely wildcard.
@@ -57,17 +57,17 @@ abstract class TypeToken<T> {
      *
      * @return Whether the type represented by this TypeToken is generic and is entirely wildcard, otherwise null.
      */
-    abstract fun isWildcard(): Boolean
+    public abstract fun isWildcard(): Boolean
 
     /**
      * Returns the parent type of the type represented by this TypeToken, if any.
      */
-    abstract fun getSuper(): List<TypeToken<*>>
+    public abstract fun getSuper(): List<TypeToken<*>>
 
     /**
      * Determines if the type represented by this type object is either the same as, or is a superclass or superinterface of, the type represented by the specified type parameter.
      */
-    open fun isAssignableFrom(typeToken: TypeToken<*>): Boolean {
+    public open fun isAssignableFrom(typeToken: TypeToken<*>): Boolean {
         if (this == typeToken || this == Any)
             return true
 
@@ -114,9 +114,9 @@ abstract class TypeToken<T> {
 
     internal abstract fun typeHashCode(): Int
 
-    companion object {
-        val Unit = erased<Unit>()
-        val Any = erased<Any>()
+    public companion object {
+        public val Unit: TypeToken<Unit> = erased<Unit>()
+        public val Any: TypeToken<Any> = erased<Any>()
     }
 
 }

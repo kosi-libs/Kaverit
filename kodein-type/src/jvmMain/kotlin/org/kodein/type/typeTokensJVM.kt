@@ -4,11 +4,11 @@ import java.lang.UnsupportedOperationException
 import java.lang.reflect.*
 import kotlin.reflect.KClass
 
-actual fun <T : Any> erasedOf(obj: T): TypeToken<out T> = JVMClassTypeToken(obj.javaClass)
+public actual fun <T : Any> erasedOf(obj: T): TypeToken<out T> = JVMClassTypeToken(obj.javaClass)
 
-actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = JVMClassTypeToken(cls.java)
+public actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = JVMClassTypeToken(cls.java)
 
-actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
+public actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
 
 private val boxes = mapOf(
         Boolean::class.java to java.lang.Boolean::class.java,
@@ -21,7 +21,7 @@ private val boxes = mapOf(
         Double::class.java to java.lang.Double::class.java
 )
 
-actual fun <T : Any> erasedComp(main: KClass<T>, vararg params: TypeToken<*>): TypeToken<T> {
+public actual fun <T : Any> erasedComp(main: KClass<T>, vararg params: TypeToken<*>): TypeToken<T> {
     require(main.java.typeParameters.size == params.size) { "Got ${params.size} type parameters, but ${main.java} takes ${main.java.typeParameters.size} parameters." }
 
     if (params.isEmpty()) return erased(main)
@@ -37,7 +37,7 @@ actual fun <T : Any> erasedComp(main: KClass<T>, vararg params: TypeToken<*>): T
     )
 }
 
-fun <T> erased(jCls: Class<T>): TypeToken<T> = JVMClassTypeToken(jCls)
+public fun <T> erased(jCls: Class<T>): TypeToken<T> = JVMClassTypeToken(jCls)
 
 /**
  * Class used to get a generic type at runtime.
@@ -61,7 +61,7 @@ internal abstract class TypeReference<T> {
  * @return The type object representing `T`.
  */
 @Suppress("UNCHECKED_CAST")
-actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken((object : TypeReference<T>() {}).superType) as TypeToken<T>
+public actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken((object : TypeReference<T>() {}).superType) as TypeToken<T>
 
 private val Type.isReified: Boolean get() =
     when (this) {
@@ -76,7 +76,7 @@ private val Type.isReified: Boolean get() =
 /**
  * Gives a [TypeToken] representing the given type.
  */
-fun typeToken(type: Type): TypeToken<*> =
+public fun typeToken(type: Type): TypeToken<*> =
         when (val k = type.kodein()) {
             is Class<*> -> JVMClassTypeToken(k)
             is ParameterizedType -> JVMParameterizedTypeToken<Any>(k.also { require(it.isReified) { "Cannot create TypeToken for non fully reified type $k" } })
