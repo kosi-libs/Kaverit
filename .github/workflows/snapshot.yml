@@ -6,6 +6,7 @@ on:
       - master
       - 'snapshot/*'
       - 'kotlin-*'
+      - 'kotlin/*'
     paths-ignore:
       - '**.md'
       - '**.adoc'
