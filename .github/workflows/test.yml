@@ -24,7 +24,6 @@ on:
       - './github/**'
       - '!./github/workflow/test.yml'
 
-
 jobs:
   build-check-all:
     runs-on: ${{ matrix.os }}
@@ -39,5 +38,7 @@ jobs:
           java-version: 11
       - name: Assemble
         run: ./gradlew assemble
+        shell: bash
       - name: Check
         run: ./gradlew check
+        shell: bash
