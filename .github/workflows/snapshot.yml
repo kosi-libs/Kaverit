@@ -43,7 +43,7 @@ jobs:
         with:
           java-version: 11
       - name: Check
-        run: check --no-daemon
+        run: ./gradlew check --no-daemon
       - name: Publish
         env:
           BINTRAY_USER: ${{ secrets.bintray_user }}
