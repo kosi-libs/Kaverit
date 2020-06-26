@@ -26,17 +26,13 @@ jobs:
         with:
           java-version: 11
       - name: Check
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: hostOnlyTest
+        run: ./gradlew hostOnlyTest
       - name: Publish
-        uses: eskatos/gradle-command-action@v1
         env:
           BINTRAY_USER: ${{ secrets.bintray_user }}
           BINTRAY_APIKEY: ${{ secrets.bintray_apikey }}
           BINTRAY_USER_ORG: ${{ secrets.bintray_user_org }}
-        with:
-          arguments: publish -PsnapshotNumber="$GITHUB_RUN_NUMBER" -PgitRef="${GITHUB_REF#refs/heads/*}"
+        run: ./gradlew hostOnlyPublish -PsnapshotNumber="$GITHUB_RUN_NUMBER" -PgitRef="${GITHUB_REF#refs/heads/*}"
   platform-independent-targets:
     needs: all-native
     runs-on: macos-latest
@@ -47,14 +43,10 @@ jobs:
         with:
           java-version: 11
       - name: Check
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: check --no-daemon
+        run: check --no-daemon
       - name: Publish
-        uses: eskatos/gradle-command-action@v1
         env:
           BINTRAY_USER: ${{ secrets.bintray_user }}
           BINTRAY_APIKEY: ${{ secrets.bintray_apikey }}
           BINTRAY_USER_ORG: ${{ secrets.bintray_user_org }}
-        with:
-          arguments: hostOnlyPublish -PsnapshotNumber="$GITHUB_RUN_NUMBER" -PgitRef="${GITHUB_REF#refs/heads/*}"
+        run: ./gradlew publish -PsnapshotNumber="$GITHUB_RUN_NUMBER" -PgitRef="${GITHUB_REF#refs/heads/*}"
