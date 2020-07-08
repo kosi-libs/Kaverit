@@ -6,7 +6,7 @@ import java.lang.reflect.*
 /**
  * The JVM type that is wrapped by a TypeToken.
  */
-internal val TypeToken<*>.jvmType: Type get() =
+public val TypeToken<*>.jvmType: Type get() =
     when (this) {
         is JVMAbstractTypeToken -> jvmType
         else -> throw IllegalStateException("${javaClass.simpleName} is not a JVM Type Token")
