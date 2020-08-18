@@ -22,8 +22,7 @@ kodein {
         }
 
         sourceSets.all {
-            languageSettings.useExperimentalAnnotation("kotlin.Experimental")
-            languageSettings.enableLanguageFeature("NewInference")
+            languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")
         }
     }
 }

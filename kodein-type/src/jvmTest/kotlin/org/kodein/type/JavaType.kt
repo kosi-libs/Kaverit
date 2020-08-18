@@ -16,7 +16,6 @@ class JavaType {
         assertNotEquals<TypeToken<*>>(erased(String::class.java), erased(Int::class.java))
     }
 
-    @ExperimentalStdlibApi
     @Test fun test01_jvmType() {
         assertEquals(String::class.java, erased<String>().jvmType)
 
