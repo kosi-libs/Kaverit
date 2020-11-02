@@ -6,7 +6,7 @@ import java.lang.reflect.*
 /**
  * The JVM type that is wrapped by a TypeToken.
  */
-val TypeToken<*>.jvmType: Type get() =
+public val TypeToken<*>.jvmType: Type get() =
     when (this) {
         is JVMAbstractTypeToken -> jvmType
         else -> throw IllegalStateException("${javaClass.simpleName} is not a JVM Type Token")
@@ -71,31 +71,6 @@ internal fun ParameterizedType.reify(parent: Type, originType: ParameterizedType
             parent.ownerType.kodein()
     )
 }
-
-//@OptIn(ExperimentalStdlibApi::class)
-//private fun Array<Type>.flatMapArgs(rawClass: Class<*>, actualTypeArguments: Array<Type>): Array<Type> {
-//    val l = mutableListOf<Type>()
-//
-//    forEach { arg ->
-//        when(arg) {
-//            is TypeVariable<*> -> arg.run {
-//                rawClass.typeParameters.indexOf(arg).takeIf { it >= 0 }
-//                        ?.let { l.add(actualTypeArguments[it].kodein()) }
-//            }
-//            is WildcardType ->  {
-//                if (arg.upperBounds[0] is ParameterizedType)
-//                    l.add((arg.upperBounds[0] as ParameterizedType).reify(arg.upperBounds[0],actualTypeArguments))
-//                else
-//                    l.add(actualTypeArguments[0].kodein())
-//            }
-//            is ParameterizedType -> l.add(arg.reify(arg, actualTypeArguments))
-//            else -> l.add(arg.kodein())
-//        }
-//    }
-//
-//    return l.toTypedArray()
-//}
-
 
 internal fun Type.removeVariables(): Type {
     if (this !is ParameterizedType) return this
