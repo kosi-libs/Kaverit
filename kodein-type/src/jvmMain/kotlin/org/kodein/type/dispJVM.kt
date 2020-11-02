@@ -25,13 +25,14 @@ private abstract class TypeStringer {
                 }
                 else -> "*"
             }
-            is GenericArrayType -> "Array<" + dispString(type.genericComponentType) + ">"
+            is GenericArrayType -> "$arrayTypeName<" + dispString(type.genericComponentType) + ">"
             is TypeVariable<*> -> type.name
             else -> throw IllegalStateException("Unknown type $javaClass")
         }
     }
 
     abstract fun dispName(cls: Class<*>, skipStars: Boolean = false): String
+    abstract val arrayTypeName: String
 }
 
 private object SimpleTypeStringer : TypeStringer() {
@@ -39,6 +40,7 @@ private object SimpleTypeStringer : TypeStringer() {
         cls.isArray -> "Array<" + dispString(cls.componentType) + ">"
         else -> cls.primitiveName ?: cls.simpleErasedName() + (if (!skipStars) cls.stars else "")
     }
+    override val arrayTypeName get() = "Array"
 }
 
 private object QualifiedTypeStringer : TypeStringer() {
@@ -47,6 +49,7 @@ private object QualifiedTypeStringer : TypeStringer() {
         else -> cls.primitiveName?.let { "kotlin.$it" }
                 ?: ((cls.`package`?.name?.plus(".") ?: "") + SimpleTypeStringer.dispName(cls, true)).magic() + (if (!skipStars) cls.stars else "")
     }
+    override val arrayTypeName get() = "kotlin.Array"
 }
 
 private val Class<*>.stars: String get() {

@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class Assign {
+class AssignTests {
 
     @Test fun test00_self() {
         assertTrue(erased<String>().isAssignableFrom(erased<String>()))

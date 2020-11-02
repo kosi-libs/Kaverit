@@ -22,6 +22,19 @@ private val boxes = mapOf(
 )
 
 public actual fun <T : Any> erasedComp(main: KClass<T>, vararg params: TypeToken<*>): TypeToken<T> {
+    if (main == Array::class) {
+        require(params.size == 1) { "Arrays may have only one parameter" }
+        if (params[0].isGeneric()) {
+            @Suppress("UNCHECKED_CAST")
+            return typeToken(GenericArrayTypeImpl(params[0].jvmType)) as TypeToken<T>
+        } else {
+            val rawComponent = params[0].getRaw().jvmType as? Class<*> ?: error("Could not get raw array component type.")
+            val descriptor = "[L${rawComponent.name};"
+            @Suppress("UNCHECKED_CAST")
+            return typeToken(Class.forName(descriptor)) as TypeToken<T>
+        }
+    }
+
     require(main.java.typeParameters.size == params.size) { "Got ${params.size} type parameters, but ${main.java} takes ${main.java.typeParameters.size} parameters." }
 
     if (params.isEmpty()) return erased(main)
@@ -80,6 +93,7 @@ public fun typeToken(type: Type): TypeToken<*> =
         when (val k = type.kodein()) {
             is Class<*> -> JVMClassTypeToken(k)
             is ParameterizedType -> JVMParameterizedTypeToken<Any>(k.also { require(it.isReified) { "Cannot create TypeToken for non fully reified type $k" } })
+            is GenericArrayType -> JVMGenericArrayTypeToken<Any>(k)
             is WildcardType -> typeToken(k.upperBounds[0])
             is TypeVariable<*> -> typeToken(k.firstBound)
             else -> throw UnsupportedOperationException("Unsupported type ${k.javaClass.name}: $k")

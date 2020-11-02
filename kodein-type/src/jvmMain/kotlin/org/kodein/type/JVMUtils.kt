@@ -100,5 +100,6 @@ private fun Array<Type>.allTypeEquals(other: Array<Type>): Boolean {
 @PublishedApi
 internal fun <T : Type?> T.kodein(): T = when (this) {
     is ParameterizedType -> ParameterizedTypeImpl(this)
+    is GenericArrayType -> GenericArrayTypeImpl(this)
     else -> this
 } as T

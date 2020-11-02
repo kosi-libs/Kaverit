@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
 @Suppress("RemoveExplicitTypeArguments")
-class Equality {
+class EqualityTests {
 
     @Test fun test00_erased() {
         assertEquals<TypeToken<*>>(erased<String>(), erased<String>())

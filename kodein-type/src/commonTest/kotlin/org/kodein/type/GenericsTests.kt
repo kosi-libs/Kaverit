@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class Generics {
+class GenericsTests {
 
     @Test fun test00_genericReifiedParameter() {
         val typeToken = generic<List<String>>()

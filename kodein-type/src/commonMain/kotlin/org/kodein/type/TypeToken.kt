@@ -31,7 +31,7 @@ public abstract class TypeToken<T> {
      * @return the raw type represented by this type.
      *   If this type is not generic, than it's raw type is itself.
      */
-    public abstract fun getRaw(): TypeToken<T>?
+    public abstract fun getRaw(): TypeToken<T>
 
     /**
      * @return Whether the type represented by this TypeToken is generic.

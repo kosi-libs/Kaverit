@@ -8,7 +8,7 @@ internal abstract class AbstractKClassTypeToken<T>(protected val type: KClass<*>
 
     override fun qualifiedDispString() = qualifiedErasedDispString()
 
-    override fun getRaw(): TypeToken<T>? = this
+    override fun getRaw(): TypeToken<T> = this
     override fun isGeneric(): Boolean = false
     override fun isWildcard(): Boolean = true
 

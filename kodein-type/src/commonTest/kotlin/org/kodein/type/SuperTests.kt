@@ -4,7 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
-class Super {
+class SuperTests {
 
     interface I
     interface GI<T>
