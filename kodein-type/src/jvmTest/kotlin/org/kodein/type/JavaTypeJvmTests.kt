@@ -8,7 +8,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
-class JavaType {
+class JavaTypeJvmTests {
 
     @Test fun test00_erased() {
         assertEquals<TypeToken<*>>(erased(String::class.java), erased<String>())

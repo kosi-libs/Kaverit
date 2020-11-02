@@ -6,7 +6,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 
-class SuperJvm {
+class SuperJvmTests {
 
     interface A
     interface B : A

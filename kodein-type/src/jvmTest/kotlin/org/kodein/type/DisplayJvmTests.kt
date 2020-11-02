@@ -3,7 +3,7 @@ package org.kodein.type
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class Display {
+class DisplayJvmTests {
 
     @Test fun test00_simple() {
         assertEquals("Map<String, out Int>", generic<Map<String, Int>>().simpleDispString())
