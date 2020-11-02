@@ -1,6 +1,7 @@
 package org.kodein.type
 
 import org.junit.Test
+import java.lang.reflect.ParameterizedType
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -23,6 +24,12 @@ class SuperJvmTests {
 
     interface IGC : IC<B>
     open class CGC : CC<B>(), IGC
+
+    interface IParent<T>
+    class IChild<K,V> : IParent<Set<Map<K, V>>>
+
+    open class CParent<T> : IParent<T>
+    class CChild<K,V> : CParent<Set<Map<K, V>>>()
 
     @Test fun test00_parentHasGenerics() {
         assertEquals(2, erased<CGC>().getSuper().count())
@@ -82,5 +89,10 @@ class SuperJvmTests {
 
         assertFalse(generic<CP<B, B>>().isAssignableFrom(erased<CGC>()))
         assertFalse(erasedComp(CP::class, erased<B>(), erased<B>()).isAssignableFrom(erased<CGC>()))
+    }
+
+    @Test fun test05_childSuperIsRecursivelyReified() {
+        assertEquals(erasedComp(IParent::class, erasedComp(Set::class, erasedComp(Map::class, generic<Int>(), generic<String>()))), generic<IChild<Int, String>>().getSuper()[0])
+        assertEquals(erasedComp(CParent::class, erasedComp(Set::class, erasedComp(Map::class, generic<Int>(), generic<String>()))), generic<CChild<Int, String>>().getSuper()[0])
     }
 }
