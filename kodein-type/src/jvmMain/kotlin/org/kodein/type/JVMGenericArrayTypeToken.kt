@@ -19,7 +19,7 @@ internal class JVMGenericArrayTypeToken<T>(override val jvmType: GenericArrayTyp
 
     override fun getGenericParameters(): Array<TypeToken<*>> = arrayOf(typeToken(jvmType.genericComponentType))
 
-    override fun isWildcard(): Boolean = getGenericParameters()[0].isWildcard()
+    override fun isWildcard(): Boolean = jvmType.genericComponentType == Object::class.java || jvmType.genericComponentType is WildcardType
 
     override fun getSuper(): List<TypeToken<*>> = emptyList()
 }

@@ -2,6 +2,8 @@ package org.kodein.type
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 
 class ArrayTests {
@@ -17,4 +19,11 @@ class ArrayTests {
         assertEquals(emptyList(), generic<Array<List<String>>>().getSuper())
         assertEquals(emptyList(), erasedComp(Array::class, erasedComp(List::class, erased(String::class))).getSuper())
     }
+
+    @Test
+    fun isWildcard() {
+        assertTrue(generic<Array<*>>().isWildcard())
+        assertFalse(generic<Array<List<*>>>().isWildcard())
+    }
+
 }
