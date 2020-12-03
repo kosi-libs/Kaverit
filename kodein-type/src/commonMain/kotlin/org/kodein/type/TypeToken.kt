@@ -72,7 +72,7 @@ public abstract class TypeToken<T> {
             return true
 
         val raw = getRaw()
-        if (raw != null && raw == typeToken.getRaw()) {
+        if (raw == typeToken.getRaw()) {
             val thisParams = getGenericParameters()
             if (thisParams.isEmpty())
                 return true

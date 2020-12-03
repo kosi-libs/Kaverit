@@ -20,9 +20,9 @@ class GenericsTests {
     }
 
     @Test fun test02_genericRaw() {
-        assertEquals<TypeToken<*>>(erased<List<*>>(), generic<List<*>>().getRaw()!!)
-        assertEquals<TypeToken<*>>(erased<List<*>>(), erased<List<*>>().getRaw()!!)
-        assertEquals<TypeToken<*>>(erased<List<*>>(), erasedComp(List::class, erased(String::class)).getRaw()!!)
+        assertEquals<TypeToken<*>>(erased<List<*>>(), generic<List<*>>().getRaw())
+        assertEquals<TypeToken<*>>(erased<List<*>>(), erased<List<*>>().getRaw())
+        assertEquals<TypeToken<*>>(erased<List<*>>(), erasedComp(List::class, erased(String::class)).getRaw())
     }
 
     @Test fun test03_isGeneric() {
