@@ -24,14 +24,17 @@ private val boxes = mapOf(
 public actual fun <T : Any> erasedComp(main: KClass<T>, vararg params: TypeToken<*>): TypeToken<T> {
     if (main == Array::class) {
         require(params.size == 1) { "Arrays may have only one parameter" }
-        if (params[0].isGeneric()) {
-            @Suppress("UNCHECKED_CAST")
-            return typeToken(GenericArrayTypeImpl(params[0].jvmType)) as TypeToken<T>
+        @Suppress("UNCHECKED_CAST")
+        return if (params[0].isGeneric()) {
+            typeToken(GenericArrayTypeImpl(params[0].jvmType)) as TypeToken<T>
         } else {
             val rawComponent = params[0].getRaw().jvmType as? Class<*> ?: error("Could not get raw array component type.")
-            val descriptor = "[L${rawComponent.name};"
-            @Suppress("UNCHECKED_CAST")
-            return typeToken(Class.forName(descriptor)) as TypeToken<T>
+            if (rawComponent.isPrimitive) {
+                typeToken(rawComponent) as TypeToken<T>
+            } else {
+                val descriptor = "[L${rawComponent.name};"
+                typeToken(Class.forName(descriptor)) as TypeToken<T>
+            }
         }
     }
 
