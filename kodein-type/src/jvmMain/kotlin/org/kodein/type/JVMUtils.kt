@@ -147,3 +147,30 @@ internal fun <T : Type?> T.kodein(): T = when (this) {
     is GenericArrayType -> GenericArrayTypeImpl(this)
     else -> this
 } as T
+
+internal fun Class<*>.arrayType(): Class<*> {
+    val descriptor = if (isPrimitive) {
+        when (this) {
+            Boolean::class.javaPrimitiveType -> "[Z"
+            Byte::class.javaPrimitiveType -> "[B"
+            Char::class.javaPrimitiveType -> "[C"
+            Short::class.javaPrimitiveType -> "[S"
+            Int::class.javaPrimitiveType -> "[I"
+            Long::class.javaPrimitiveType -> "[J"
+            Float::class.javaPrimitiveType -> "[F"
+            Double::class.javaPrimitiveType -> "[D"
+            else -> error("Unknown primitive type $this")
+        }
+    } else {
+        "[L$name;"
+    }
+    return Class.forName(descriptor)
+}
+
+public fun TypeToken<*>.primitiveType(): TypeToken<*> {
+    if (jvmType !is Class<*>) error("$this does not represent a boxed primitive type")
+    return typeToken(
+        (jvmType as Class<*>).kotlin.javaPrimitiveType
+            ?: error("$this does not represent a boxed primitive type")
+        )
+}

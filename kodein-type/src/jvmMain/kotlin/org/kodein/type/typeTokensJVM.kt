@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
 
 public actual fun <T : Any> erasedOf(obj: T): TypeToken<out T> = JVMClassTypeToken(obj.javaClass)
 
-public actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = JVMClassTypeToken(cls.java)
+public actual fun <T : Any> erased(cls: KClass<T>): TypeToken<T> = JVMClassTypeToken(cls.javaObjectType)
 
 public actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::class)
 
@@ -29,12 +29,7 @@ public actual fun <T : Any> erasedComp(main: KClass<T>, vararg params: TypeToken
             typeToken(GenericArrayTypeImpl(params[0].jvmType)) as TypeToken<T>
         } else {
             val rawComponent = params[0].getRaw().jvmType as? Class<*> ?: error("Could not get raw array component type.")
-            if (rawComponent.isPrimitive) {
-                typeToken(rawComponent) as TypeToken<T>
-            } else {
-                val descriptor = "[L${rawComponent.name};"
-                typeToken(Class.forName(descriptor)) as TypeToken<T>
-            }
+            typeToken(rawComponent.arrayType()) as TypeToken<T>
         }
     }
 
@@ -96,7 +91,16 @@ public fun typeToken(type: Type): TypeToken<*> =
         when (val k = type.kodein()) {
             is Class<*> -> JVMClassTypeToken(k)
             is ParameterizedType -> JVMParameterizedTypeToken<Any>(k.also { require(it.isReified) { "Cannot create TypeToken for non fully reified type $k" } })
-            is GenericArrayType -> JVMGenericArrayTypeToken<Any>(k)
+            is GenericArrayType -> {
+                val component = typeToken(k.genericComponentType)
+                val rawComponent = (component.getRaw().jvmType as Class<*>)
+                when {
+                    rawComponent.isPrimitive -> JVMClassTypeToken(rawComponent.arrayType())
+                    !component.isGeneric() -> JVMClassTypeToken(rawComponent.arrayType())
+                    component.isGeneric() && component.isWildcard() -> JVMClassTypeToken((component.getRaw().jvmType as Class<*>).arrayType())
+                    else -> JVMGenericArrayTypeToken(k)
+                }
+            }
             is WildcardType -> typeToken(k.upperBounds[0])
             is TypeVariable<*> -> typeToken(k.firstBound)
             else -> throw UnsupportedOperationException("Unsupported type ${k.javaClass.name}: $k")

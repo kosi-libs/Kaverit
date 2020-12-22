@@ -37,7 +37,23 @@ private abstract class TypeStringer {
 
 private object SimpleTypeStringer : TypeStringer() {
     override fun dispName(cls: Class<*>, skipStars: Boolean): String = when {
-        cls.isArray -> "Array<" + dispString(cls.componentType) + ">"
+        cls.isArray -> {
+            if (cls.componentType.isPrimitive) {
+                when (cls.componentType) {
+                    Boolean::class.javaPrimitiveType -> "BooleanArray"
+                    Byte::class.javaPrimitiveType -> "ByteArray"
+                    Char::class.javaPrimitiveType -> "CharArray"
+                    Short::class.javaPrimitiveType -> "ShortArray"
+                    Int::class.javaPrimitiveType -> "IntArray"
+                    Long::class.javaPrimitiveType -> "LongArray"
+                    Float::class.javaPrimitiveType -> "FloatArray"
+                    Double::class.javaPrimitiveType -> "DoubleArray"
+                    else -> error("Unknown primitive type $this")
+                }
+            } else {
+                "Array<" + dispString(cls.componentType) + ">"
+            }
+        }
         else -> cls.primitiveName ?: cls.simpleErasedName() + (if (!skipStars) cls.stars else "")
     }
     override val arrayTypeName get() = "Array"

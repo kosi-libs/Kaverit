@@ -2,6 +2,7 @@ package org.kodein.type
 
 import org.junit.Test
 import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 import java.lang.reflect.WildcardType
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -31,4 +32,9 @@ class JavaTypeJvmTests {
         }
     }
 
+    @Test fun test03_primitive() {
+        assertEquals(generic<Byte>().primitiveType(), erased(Byte::class).primitiveType())
+        assertNotEquals(generic<Byte>().primitiveType(), generic<Byte>())
+        assertNotEquals(erased(Byte::class).primitiveType(), erased(Byte::class))
+    }
 }
