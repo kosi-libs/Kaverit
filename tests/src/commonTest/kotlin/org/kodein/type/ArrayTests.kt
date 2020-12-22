@@ -26,4 +26,9 @@ class ArrayTests {
         assertFalse(generic<Array<List<*>>>().isWildcard())
     }
 
+    @Test
+    fun arrayAsString() {
+        assertEquals("Array<Byte>", generic<Array<Byte>>().simpleDispString())
+    }
+
 }

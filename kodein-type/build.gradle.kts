@@ -5,7 +5,7 @@ plugins {
 kodein {
     kotlin {
 
-        val allNonJvm = sourceSets.create("allNonJvm") {
+        val allNonJvm = sourceSets.create("allNonJvmMain") {
             dependsOn(common.main)
         }
 

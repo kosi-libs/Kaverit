@@ -1,7 +1,6 @@
 package org.kodein.type
 
 import org.junit.Test
-import java.lang.reflect.ParameterizedType
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

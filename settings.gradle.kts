@@ -1,3 +1,5 @@
+import org.kodein.internal.gradle.settings.android
+
 buildscript {
     repositories {
         mavenLocal()
@@ -14,6 +16,6 @@ apply { plugin("org.kodein.settings") }
 rootProject.name = "Kodein-Type"
 
 include(
-        "kodein-type",
-        ""
+    "kodein-type",
+    "tests"
 )
