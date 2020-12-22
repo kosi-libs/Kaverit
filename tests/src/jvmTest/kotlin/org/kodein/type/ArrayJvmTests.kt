@@ -21,4 +21,13 @@ class ArrayJvmTests {
         assertTrue(erasedComp(Array::class, erasedComp(List::class, erased(String::class))).isGeneric())
     }
 
+    @Test
+    fun jvmByteArray() {
+        val byteArray = generic<ByteArray>()
+        println(byteArray)
+        val array = generic<Array<Byte>>()
+        println(array)
+        val erasedComp = erasedComp(Array::class, erased<Byte>())
+        println(erasedComp)
+    }
 }
