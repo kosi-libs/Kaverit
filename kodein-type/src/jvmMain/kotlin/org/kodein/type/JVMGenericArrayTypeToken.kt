@@ -11,7 +11,7 @@ internal class JVMGenericArrayTypeToken<T>(override val jvmType: GenericArrayTyp
     override fun getRaw(): TypeToken<T> {
         val rawComponent = typeToken(jvmType.genericComponentType).getRaw().jvmType as? Class<*> ?: error("Could not get raw array component type.")
         @Suppress("UNCHECKED_CAST")
-        return typeToken(rawComponent.arrayType()) as TypeToken<T>
+        return typeToken(rawComponent.jvmArrayType()) as TypeToken<T>
     }
 
     override fun isGeneric(): Boolean = true

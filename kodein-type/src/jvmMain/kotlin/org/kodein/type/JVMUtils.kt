@@ -148,7 +148,7 @@ internal fun <T : Type?> T.kodein(): T = when (this) {
     else -> this
 } as T
 
-internal fun Class<*>.arrayType(): Class<*> {
+internal fun Class<*>.jvmArrayType(): Class<*> {
     val descriptor = if (isPrimitive) {
         when (this) {
             Boolean::class.javaPrimitiveType -> "[Z"

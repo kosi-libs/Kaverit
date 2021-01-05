@@ -29,7 +29,7 @@ public actual fun <T : Any> erasedComp(main: KClass<T>, vararg params: TypeToken
             typeToken(GenericArrayTypeImpl(params[0].jvmType)) as TypeToken<T>
         } else {
             val rawComponent = params[0].getRaw().jvmType as? Class<*> ?: error("Could not get raw array component type.")
-            typeToken(rawComponent.arrayType()) as TypeToken<T>
+            typeToken(rawComponent.jvmArrayType()) as TypeToken<T>
         }
     }
 
@@ -95,9 +95,9 @@ public fun typeToken(type: Type): TypeToken<*> =
                 val component = typeToken(k.genericComponentType)
                 val rawComponent = (component.getRaw().jvmType as Class<*>)
                 when {
-                    rawComponent.isPrimitive -> JVMClassTypeToken(rawComponent.arrayType())
-                    !component.isGeneric() -> JVMClassTypeToken(rawComponent.arrayType())
-                    component.isGeneric() && component.isWildcard() -> JVMClassTypeToken((component.getRaw().jvmType as Class<*>).arrayType())
+                    rawComponent.isPrimitive -> JVMClassTypeToken(rawComponent.jvmArrayType())
+                    !component.isGeneric() -> JVMClassTypeToken(rawComponent.jvmArrayType())
+                    component.isGeneric() && component.isWildcard() -> JVMClassTypeToken((component.getRaw().jvmType as Class<*>).jvmArrayType())
                     else -> JVMGenericArrayTypeToken(k)
                 }
             }
