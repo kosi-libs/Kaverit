@@ -6,7 +6,3 @@ allprojects {
     group = "org.kodein.type"
     version = "1.5.0"
 }
-
-kodeinPublications {
-    repo = "Kodein-Type"
-}
