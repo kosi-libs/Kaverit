@@ -4,12 +4,6 @@ on:
   release:
     types: [published]
 
-env:
-  SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-  SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-  GPG_PRIVATE_KEY: ${{ secrets.PGP_SIGNING_KEY }}
-  GPG_PRIVATE_PASSWORD: ${{ secrets.PGP_SIGNING_PASSWORD }}
-
 jobs:
   create-staging-repository:
     name: Create staging repository
@@ -20,17 +14,22 @@ jobs:
       - id: create
         uses: nexus-actions/create-nexus-staging-repo@v1.1
         with:
-          username: $SONATYPE_USERNAME
-          password: $SONATYPE_PASSWORD
+          username: ${{ secrets.SONATYPE_USERNAME }}
+          password: ${{ secrets.SONATYPE_PASSWORD }}
           staging_profile_id: ${{ secrets.SONATYPE_PROFILE_ID }}
           description: ${{ github.repository }}/${{ github.workflow }}#${{ github.run_number }}
 
   build-upload:
     needs: create-staging-repository
     runs-on: ${{ matrix.os }}
+    env:
+      SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+      GPG_PRIVATE_KEY: ${{ secrets.PGP_SIGNING_KEY }}
+      GPG_PRIVATE_PASSWORD: ${{ secrets.PGP_SIGNING_PASSWORD }}
     strategy:
       matrix:
-        os: [macOS-latest, windows-latest]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
       - name: Check out
         uses: actions/checkout@v2
@@ -65,7 +64,7 @@ jobs:
           script: ./gradlew connectedCheck
       - name: Upload (macos / windows)
         if: matrix.os != 'ubuntu-latest'
-        run: ./gradlew hostOnlyPublish -Porg.kodein.sonatype.repositoryId=${{ needs.create-staging-repository.outputs.repository-id }}
+        run: ./gradlew hostOnlyPublish -Porg.kodein.sonatype.repositoryId=${{ needs.create-staging-repository.outputs.repository_id }}
         shell: bash
       # Linux / JVM / JS
       - name: Check (ubuntu)
@@ -74,7 +73,7 @@ jobs:
         shell: bash
       - name: Upload (ubuntu)
         if: matrix.os == 'ubuntu-latest'
-        run: ./gradlew publish -Porg.kodein.sonatype.repositoryId=${{ needs.create-staging-repository.outputs.repository-id }}
+        run: ./gradlew publishAllPublicationsToOssrhStagingRepository -Porg.kodein.sonatype.repositoryId=${{ needs.create-staging-repository.outputs.repository_id }}
         shell: bash
 
   drop-or-release:
@@ -86,13 +85,13 @@ jobs:
         if: ${{ needs.build-upload.result != 'success' }}
         uses: nexus-actions/drop-nexus-staging-repo@v1
         with:
-          username: ${{ secrets.NEXUS_ACTIONS_SONATYPE_USERNAME }}
-          password: ${{ secrets.NEXUS_ACTIONS_SONATYPE_PASSWORD }}
+          username: ${{ secrets.SONATYPE_USERNAME }}
+          password: ${{ secrets.SONATYPE_PASSWORD }}
           staging_repository_id: ${{ needs.create_staging_repository.outputs.repository_id }}
       - name: Release
         if: ${{ needs.build-upload.result == 'success' }}
         uses: nexus-actions/release-nexus-staging-repo@v1
         with:
-          username: ${{ secrets.NEXUS_ACTIONS_SONATYPE_USERNAME }}
-          password: ${{ secrets.NEXUS_ACTIONS_SONATYPE_PASSWORD }}
+          username: ${{ secrets.SONATYPE_USERNAME }}
+          password: ${{ secrets.SONATYPE_PASSWORD }}
           staging_repository_id: ${{ needs.create_staging_repository.outputs.repository_id }}
