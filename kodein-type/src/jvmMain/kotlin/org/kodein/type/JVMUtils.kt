@@ -8,7 +8,7 @@ import java.lang.reflect.*
  */
 public val TypeToken<*>.jvmType: Type get() =
     when (this) {
-        is JVMAbstractTypeToken -> jvmType
+        is JVMTypeToken -> jvmType
         else -> throw IllegalStateException("${javaClass.simpleName} is not a JVM Type Token")
     }
 

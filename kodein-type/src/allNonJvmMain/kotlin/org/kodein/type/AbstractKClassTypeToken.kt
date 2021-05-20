@@ -2,7 +2,7 @@ package org.kodein.type
 
 import kotlin.reflect.KClass
 
-internal abstract class AbstractKClassTypeToken<T>(protected val type: KClass<*>): TypeToken<T>() {
+internal abstract class AbstractKClassTypeToken<T>(protected val type: KClass<*>): AbstractTypeToken<T>() {
 
     override fun simpleDispString(): String = simpleErasedDispString()
 
