@@ -65,6 +65,14 @@ internal abstract class TypeReference<T> {
     val superType: Type = (javaClass.genericSuperclass as? ParameterizedType ?: throw RuntimeException("Invalid TypeToken; must specify type parameters")).actualTypeArguments[0]
 }
 
+@PublishedApi
+internal class GenericJVMTypeTokenDelegate<T: Any>(private val typeToken: JVMTypeToken<T>, private val raw: Class<T>) : JVMTypeToken<T> by typeToken {
+    override fun getRaw(): TypeToken<T> = JVMClassTypeToken(raw)
+    override fun equals(other: Any?): Boolean = typeToken.equals(other)
+    override fun hashCode(): Int = typeToken.hashCode()
+    override fun toString(): String = typeToken.toString()
+}
+
 /**
  * Function used to get a generic type at runtime.
  *
@@ -72,7 +80,7 @@ internal abstract class TypeReference<T> {
  * @return The type object representing `T`.
  */
 @Suppress("UNCHECKED_CAST")
-public actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken((object : TypeReference<T>() {}).superType) as TypeToken<T>
+public actual inline fun <reified T : Any> generic(): TypeToken<T> = GenericJVMTypeTokenDelegate(typeToken((object : TypeReference<T>() {}).superType) as JVMTypeToken<T>, T::class.java)
 
 private val Type.isReified: Boolean get() =
     when (this) {
@@ -87,7 +95,7 @@ private val Type.isReified: Boolean get() =
 /**
  * Gives a [TypeToken] representing the given type.
  */
-public fun typeToken(type: Type): TypeToken<*> =
+public fun typeToken(type: Type): JVMTypeToken<*> =
         when (val k = type.kodein()) {
             is Class<*> -> JVMClassTypeToken(k)
             is ParameterizedType -> JVMParameterizedTypeToken<Any>(k.also { require(it.isReified) { "Cannot create TypeToken for non fully reified type $k" } })

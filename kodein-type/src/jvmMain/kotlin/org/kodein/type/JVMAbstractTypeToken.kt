@@ -2,15 +2,18 @@ package org.kodein.type
 
 import java.lang.reflect.*
 
-internal abstract class JVMAbstractTypeToken<T> : TypeToken<T>() {
 
-    abstract val jvmType: Type
+public interface JVMTypeToken<T> : TypeToken<T> {
+    public val jvmType: Type
+}
+
+internal abstract class JVMAbstractTypeToken<T> : AbstractTypeToken<T>(), JVMTypeToken<T> {
 
     override fun simpleDispString() = jvmType.simpleDispString()
     override fun qualifiedDispString() = jvmType.qualifiedDispString()
 
     final override fun typeEquals(other: TypeToken<*>): Boolean {
-        require(other is JVMAbstractTypeToken<*>)
+        require(other is JVMTypeToken<*>)
 
         return Equals(jvmType, other.jvmType)
     }
