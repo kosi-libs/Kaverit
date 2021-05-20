@@ -4,7 +4,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
 
-internal class JSKTypeTypeToken<T>(private val type: KType) : TypeToken<T>() {
+internal class JSKTypeTypeToken<T>(private val type: KType) : AbstractTypeToken<T>() {
 
     override fun simpleDispString() = type.toString()
 

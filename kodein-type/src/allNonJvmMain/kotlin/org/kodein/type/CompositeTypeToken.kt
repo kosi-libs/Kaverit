@@ -15,7 +15,7 @@ package org.kodein.type
  * @property main The main type represented by this type token.
  * @property params The type parameters of the main type.
  */
-internal class CompositeTypeToken<T>(val main: TypeToken<T>, vararg val params: TypeToken<*>) : TypeToken<T>() {
+internal class CompositeTypeToken<T>(val main: TypeToken<T>, vararg val params: TypeToken<*>) : AbstractTypeToken<T>() {
 
     init {
         if (params.isEmpty())
