@@ -9,8 +9,6 @@ kodein {
             implementation(project(":kodein-type"))
         }
 
-        add(kodeinTargets.jvm.android)
-
         add(kodeinTargets.jvm.jvm)
 
         add(kodeinTargets.jvm.android) {
