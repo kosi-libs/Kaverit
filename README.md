@@ -1,6 +1,6 @@
-![Release](https://github.com/Kodein-Framework/Kodein-Type/workflows/Release/badge.svg)
+![Release](https://github.com/kosi-libs/Kaverit/workflows/Release/badge.svg)
 
-Kodein-Type
+Kaverit
 ===========
 
 A light multiplatform Kotlin reflection API.

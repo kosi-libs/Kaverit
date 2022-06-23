@@ -12,9 +12,9 @@ buildscript {
 
 apply { plugin("org.kodein.settings") }
 
-rootProject.name = "Kodein-Type"
+rootProject.name = "Kaverit"
 
 include(
-    "kodein-type",
+    "kaverit",
     "tests"
 )

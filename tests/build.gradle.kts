@@ -6,7 +6,7 @@ kodein {
     kotlin {
 
         common.main.dependencies {
-            implementation(project(":kodein-type"))
+            implementation(project(":kaverit"))
         }
 
         add(kodeinTargets.jvm.jvm)
