@@ -1,6 +1,6 @@
 import org.kodein.internal.gradle.settings.android
 
-buildscript {
+@Suppress("GradleDependency") buildscript {
     repositories {
         mavenLocal()
         maven(url = "https://raw.githubusercontent.com/kosi-libs/kodein-internal-gradle-plugin/mvn-repo")
