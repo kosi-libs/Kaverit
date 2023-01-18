@@ -1,5 +1,13 @@
 plugins {
-    id("org.kodein.library.mpp")
+    id("org.kodein.library.mpp-with-android")
+}
+
+kodeinAndroid {
+    android {
+        defaultConfig {
+            consumerProguardFiles("proguard-rules.pro")
+        }
+    }
 }
 
 kodein {
@@ -11,6 +19,10 @@ kodein {
 
         add(kodeinTargets.jvm.jvm) {
             target.setCompileClasspath()
+        }
+
+        add(kodeinTargets.jvm.android) {
+            main.dependsOn(sourceSets["jvmMain"])
         }
 
         add(kodeinTargets.native.all) {
