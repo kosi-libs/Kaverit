@@ -17,19 +17,13 @@ kodein {
             main.dependsOn(allNonJvm)
         }
 
-        add(kodeinTargets.js.ir.js) {
+        add(kodeinTargets.js.js) {
             main.dependsOn(allNonJvm)
-        }
-
-        sourceSets.all {
-            languageSettings {
-                optIn("kotlin.RequiresOptIn")
-            }
         }
     }
 }
 
 kodeinUpload {
-    name = "Kodein-Type"
+    name = "Kaverit"
     description = "Kodein Type System"
 }
