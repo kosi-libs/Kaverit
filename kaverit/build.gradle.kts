@@ -1,26 +1,19 @@
 plugins {
-    id("org.kodein.library.mpp")
+    kodein.library.mpp
 }
 
-kodein {
-    kotlin {
+kotlin.kodein {
+    all()
 
-        val allNonJvm = sourceSets.create("allNonJvmMain") {
-            dependsOn(common.main)
-        }
-
-        add(kodeinTargets.jvm.jvm) {
-            target.setCompileClasspath()
-        }
-
-        add(kodeinTargets.native.all) {
-            main.dependsOn(allNonJvm)
-        }
-
-        add(kodeinTargets.js.js) {
-            main.dependsOn(allNonJvm)
-        }
+    jvm {
+        target.setCompileClasspath()
     }
+}
+
+kotlin.sourceSets {
+    val nonJvmMain = create("nonJvmMain") { dependsOn(commonMain.get()) }
+    getByName("nativeMain").dependsOn(nonJvmMain)
+    getByName("jsBasedMain").dependsOn(nonJvmMain)
 }
 
 kodeinUpload {
