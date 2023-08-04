@@ -1,5 +1,8 @@
+@file:OptIn(BetaInteropApi::class)
+
 package org.kodein.type
 
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ObjCClass
 import kotlinx.cinterop.ObjCProtocol
 import kotlinx.cinterop.getOriginalKotlinClass
@@ -24,7 +27,6 @@ public actual inline fun <reified T : Any> erased(): TypeToken<T> = erased(T::cl
  * @param T The type to get.
  * @return The type object representing `T`.
  */
-@OptIn(ExperimentalStdlibApi::class)
 @Suppress("UNCHECKED_CAST")
 public actual inline fun <reified T : Any> generic(): TypeToken<T> = typeToken(typeOf<T>()) as TypeToken<T>
 

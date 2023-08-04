@@ -4,7 +4,6 @@ plugins {
 
 kotlin.kodein {
     all()
-
     jvm {
         target.setCompileClasspath()
     }
