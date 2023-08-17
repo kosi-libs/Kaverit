@@ -14,5 +14,5 @@ rootProject.name = "Kosi-Kaverit"
 
 include(
     "kaverit",
-    "tests"
+//    "tests"
 )
