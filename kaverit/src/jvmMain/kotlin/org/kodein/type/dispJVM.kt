@@ -51,19 +51,22 @@ private object SimpleTypeStringer : TypeStringer() {
                     else -> error("Unknown primitive type $this")
                 }
             } else {
-                "Array<" + dispString(cls.componentType) + ">"
+                "Array<" + dispString(cls.componentType as Type) + ">"
             }
         }
-        else -> cls.primitiveName ?: cls.simpleErasedName() + (if (!skipStars) cls.stars else "")
+        else -> cls.primitiveName ?: (cls.simpleErasedName() + (if (!skipStars) cls.stars else ""))
     }
     override val arrayTypeName get() = "Array"
 }
 
 private object QualifiedTypeStringer : TypeStringer() {
     override fun dispName(cls: Class<*>, skipStars: Boolean) = when {
-        cls.isArray -> "kotlin.Array<" + dispString(cls.componentType) + ">"
+        cls.isArray -> "kotlin.Array<" + dispString(cls.componentType as Type) + ">"
         else -> cls.primitiveName?.let { "kotlin.$it" }
-                ?: ((cls.`package`?.name?.plus(".") ?: "") + SimpleTypeStringer.dispName(cls, true)).magic() + (if (!skipStars) cls.stars else "")
+            ?: (((cls.`package`?.name?.plus(".") ?: "") + SimpleTypeStringer.dispName(
+                cls,
+                true
+            )).magic() + (if (!skipStars) cls.stars else ""))
     }
     override val arrayTypeName get() = "kotlin.Array"
 }
@@ -153,7 +156,7 @@ internal fun Type.simpleErasedName(): String {
  */
 internal fun Type.qualifiedErasedName(): String {
     return when (this) {
-        is Class<*> -> canonicalName.magic()
+        is Class<*> -> (canonicalName as String).magic()
         is ParameterizedType -> rawClass.qualifiedErasedName()
         is GenericArrayType -> genericComponentType.qualifiedErasedName()
         is WildcardType -> "*"
