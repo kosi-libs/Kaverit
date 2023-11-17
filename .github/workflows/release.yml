@@ -22,15 +22,12 @@ jobs:
 
   build-upload:
     needs: create-staging-repository
-    runs-on: ${{ matrix.os }}
+    runs-on: macOS-latest
     env:
       SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
       SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
       GPG_PRIVATE_KEY: ${{ secrets.PGP_SIGNING_KEY }}
       GPG_PRIVATE_PASSWORD: ${{ secrets.PGP_SIGNING_PASSWORD }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 #v3
@@ -47,30 +44,17 @@ jobs:
         with:
           java-version: 17
           distribution: 'temurin'
-      # Host only for MacOS / Windows
-      - name: Check (macos / windows)
-        if: matrix.os != 'ubuntu-latest'
+      - name: Check
         run: ./gradlew hostOnlyTest
         shell: bash
       - name: Check Android
-        if: matrix.os == 'macOS-latest'
         uses: reactivecircus/android-emulator-runner@d94c3fbe4fe6a29e4a5ba47c12fb47677c73656b #v2.28.0
         with:
           api-level: 29
           ndk: 21.3.6528147
           cmake: 3.10.2.4988404
           script: ./gradlew connectedCheck
-      - name: Upload (macos / windows)
-        if: matrix.os != 'ubuntu-latest'
-        run: ./gradlew hostOnlyPublish -Porg.kodein.sonatype.repositoryId=${{ needs.create-staging-repository.outputs.repository_id }}
-        shell: bash
-      # Linux / JVM / JS
-      - name: Check (ubuntu)
-        if: matrix.os == 'ubuntu-latest'
-        run: ./gradlew check
-        shell: bash
-      - name: Upload (ubuntu)
-        if: matrix.os == 'ubuntu-latest'
+      - name: Upload
         run: ./gradlew publishAllPublicationsToOssrhStagingRepository -Porg.kodein.sonatype.repositoryId=${{ needs.create-staging-repository.outputs.repository_id }}
         shell: bash
 
