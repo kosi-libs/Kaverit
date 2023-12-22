@@ -13,8 +13,6 @@ kotlin.sourceSets {
     val nonJvmMain = create("nonJvmMain") { dependsOn(commonMain.get()) }
     getByName("nativeMain").dependsOn(nonJvmMain)
     getByName("jsBasedMain").dependsOn(nonJvmMain)
-    getByName("jvmMain").dependsOn(getByName("jvmBasedMain"))
-    getByName("androidMain").dependsOn(getByName("jvmBasedMain"))
 }
 
 android {
