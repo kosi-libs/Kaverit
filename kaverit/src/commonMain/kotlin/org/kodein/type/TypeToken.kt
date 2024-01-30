@@ -1,6 +1,13 @@
 package org.kodein.type
 
 
+/**
+ * An interface that describes a simple Type but is parameterized to enable type safety.
+ * 
+ * Can be constructed with [generic], [erased], or [erasedComp].
+ *
+ * @param T The type represented by this object.
+ */
 public interface TypeToken<T> {
     /**
      * @return The simple (a.k.a. not fully qualified) name of the type represented by this TypeToken.
@@ -24,7 +31,7 @@ public interface TypeToken<T> {
 
     /**
      * @return the raw type represented by this type.
-     *   If this type is not generic, than it's raw type is itself.
+     *         If this type is not generic, than it's raw type is itself.
      */
     public fun getRaw(): TypeToken<T>
 
@@ -34,12 +41,12 @@ public interface TypeToken<T> {
     public fun isGeneric(): Boolean
 
     /**
-     * @return A list of generic parameters (empty if this types does not have generic parameters).
+     * @return A list of generic parameters (empty if this type does not have generic parameters).
      */
     public fun getGenericParameters(): Array<TypeToken<*>>
 
     /**
-     * Returns whether the type represented by this TypeToken is generic and is entirely wildcard.
+     * Whether the type represented by this TypeToken is generic and is entirely wildcard.
      *
      * Examples:
      *
@@ -50,17 +57,17 @@ public interface TypeToken<T> {
      * - `Map<*, String>`: false
      * - `Map<String, String>`: very false!
      *
-     * @return Whether the type represented by this TypeToken is generic and is entirely wildcard, otherwise null.
+     * @return true if the type represented by this TypeToken is generic and entirely wildcard, false otherwise.
      */
     public fun isWildcard(): Boolean
 
     /**
-     * Returns the parent type of the type represented by this TypeToken, if any.
+     * Returns the parent types of the type represented by this TypeToken (empty list if there are none).
      */
     public fun getSuper(): List<TypeToken<*>>
 
     /**
-     * Determines if the type represented by this type object is either the same as, or is a superclass or superinterface of, the type represented by the specified type parameter.
+     * Determines if the type represented by this TypeToken is either the same as, or is a superclass or superinterface of, the type represented by the specified TypeToken parameter.
      */
     public fun isAssignableFrom(typeToken: TypeToken<*>): Boolean
 
@@ -70,11 +77,6 @@ public interface TypeToken<T> {
     }
 }
 
-/**
- * An interface that contains a simple Type but is parameterized to enable type safety.
- *
- * @param T The type represented by this object.
- */
 public abstract class AbstractTypeToken<T> : TypeToken<T> {
 
     /**
