@@ -14,7 +14,29 @@ on:
       - '!./github/workflow/snapshot.yml'
 
 jobs:
-  build-upload:
+  unit-tests:
+    name: Unit tests
+    runs-on: macOS-latest
+    steps:
+      - name: Setup
+        uses: kosi-libs/kodein-internal-github-actions/setup@main
+      - name: Check
+        run: ./gradlew check
+        shell: bash
+
+  instrumentation-tests:
+    name: Instrumentation tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: kosi-libs/kodein-internal-github-actions/setup@main
+      - name: Check with Android
+        uses: kosi-libs/kodein-internal-github-actions/checkWithAndroid@main
+
+  upload:
+    needs:
+      - unit-tests
+      - instrumentation-tests
     runs-on: macOS-latest
     env:
       SONATYPE_USERNAME: ${{ secrets.sonatype_username }}
@@ -22,8 +44,8 @@ jobs:
     steps:
       - name: Setup
         uses: kosi-libs/kodein-internal-github-actions/setup@main
-      - name: Check with Android
-        uses: kosi-libs/kodein-internal-github-actions/checkWithAndroid@main
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v3
       - name: Upload
         run: ./gradlew publishAllPublicationsToOssrhStagingRepository -PgitRef=${{ github.ref }} -Psnapshot=true
         shell: bash

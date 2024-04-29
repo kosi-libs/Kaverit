@@ -4,5 +4,5 @@ plugins {
 
 allprojects {
     group = "org.kodein.type"
-    version = "2.8.2"
+    version = "2.9.0"
 }
