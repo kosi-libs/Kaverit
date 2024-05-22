@@ -33,7 +33,7 @@ jobs:
         shell: bash
 
   drop-or-release-staging-repository:
-    needs: [create-staging-repository, upload]
+    needs: [create-staging-repository, upload-release]
     if: ${{ always() && needs.create-staging-repository.result == 'success' }}
     uses: kosi-libs/kodein-internal-github-actions/.github/workflows/drop-or-release-nexus-staging-repository.yml@main
     secrets: inherit
