@@ -39,4 +39,4 @@ jobs:
     secrets: inherit
     with:
       repository-id: ${{ needs.create-staging-repository.outputs.repository-id }}
-      build-upload-result: ${{ needs.build-upload.result }}
+      build-upload-result: ${{ needs.upload-release.result }}
