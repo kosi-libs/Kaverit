@@ -16,3 +16,7 @@ erased<List<*>>() == generic<List<*>>()
 
 generic<List<String>>() == erasedComp<List<String>>(List::class, String::class)
 ```
+
+## Supported by
+
+[![JetBrains logo.](https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg)](https://jb.gg/OpenSourceSupport)
