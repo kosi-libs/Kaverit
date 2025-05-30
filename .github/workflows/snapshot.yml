@@ -31,5 +31,5 @@ jobs:
       - name: Setup
         uses: kosi-libs/kodein-internal-github-actions/setup@main
       - name: Upload
-        run: ./gradlew publishAllPublicationsToOssrhStagingRepository -PgitRef=${{ github.ref }} -Psnapshot=true
+        run: ./gradlew publishAggregationToCentralPortalSnapshots -PgitRef=${{ github.ref }} -Psnapshot=true
         shell: bash

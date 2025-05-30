@@ -10,18 +10,10 @@ jobs:
   instrumentation-tests:
     uses: kosi-libs/kodein-internal-github-actions/.github/workflows/check-with-android.yml@main
 
-  create-staging-repository:
-    needs:
-      - unit-tests
-      - instrumentation-tests
-    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/create-nexus-staging-repository.yml@main
-    secrets: inherit
-
   upload-release:
-    needs: create-staging-repository
     runs-on: macOS-latest
     env:
-      SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+      SONATYPE_USERNAME: ${{ secrets.SONATYPE_TOKEN_USER }}
       SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
       GPG_PRIVATE_KEY: ${{ secrets.PGP_SIGNING_KEY }}
       GPG_PRIVATE_PASSWORD: ${{ secrets.PGP_SIGNING_PASSWORD }}
@@ -29,14 +21,5 @@ jobs:
       - name: Setup
         uses: kosi-libs/kodein-internal-github-actions/setup@main
       - name: Upload
-        run: ./gradlew publishAllPublicationsToOssrhStagingRepository -Porg.kodein.sonatype.repositoryId=${{ needs.create-staging-repository.outputs.repository-id }}
+        run: ./gradlew publishAggregationToCentralPortal
         shell: bash
-
-  drop-or-release-staging-repository:
-    needs: [create-staging-repository, upload-release]
-    if: ${{ always() && needs.create-staging-repository.result == 'success' }}
-    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/drop-or-release-nexus-staging-repository.yml@main
-    secrets: inherit
-    with:
-      repository-id: ${{ needs.create-staging-repository.outputs.repository-id }}
-      build-upload-result: ${{ needs.upload-release.result }}
