@@ -25,8 +25,8 @@ jobs:
       - instrumentation-tests
     runs-on: macOS-latest
     env:
-      SONATYPE_USERNAME: ${{ secrets.sonatype_username }}
-      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
+      CENTRAL_PORTAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_PORTAL_TOKEN_USERNAME }}
+      CENTRAL_PORTAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_PORTAL_TOKEN_PASSWORD }}
     steps:
       - name: Setup
         uses: kosi-libs/kodein-internal-github-actions/setup@main

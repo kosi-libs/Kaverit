@@ -11,10 +11,11 @@ jobs:
     uses: kosi-libs/kodein-internal-github-actions/.github/workflows/check-with-android.yml@main
 
   upload-release:
+    needs: [unit-tests, instrumentation-tests]
     runs-on: macOS-latest
     env:
-      SONATYPE_USERNAME: ${{ secrets.SONATYPE_TOKEN_USER }}
-      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
+      CENTRAL_PORTAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_PORTAL_TOKEN_USERNAME }}
+      CENTRAL_PORTAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_PORTAL_TOKEN_PASSWORD }}
       GPG_PRIVATE_KEY: ${{ secrets.PGP_SIGNING_KEY }}
       GPG_PRIVATE_PASSWORD: ${{ secrets.PGP_SIGNING_PASSWORD }}
     steps:
