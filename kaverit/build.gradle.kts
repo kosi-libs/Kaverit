@@ -7,19 +7,19 @@ kotlin.kodein {
     jvm {
         target.setCompileClasspath()
     }
+    android {
+        target.namespace = "org.kodein.type"
+        target.optimization {
+            consumerKeepRules.files("proguard-rules.pro")
+            consumerKeepRules.publish = true
+        }
+    }
 }
 
 kotlin.sourceSets {
     val nonJvmMain = create("nonJvmMain") { dependsOn(commonMain.get()) }
     getByName("nativeMain").dependsOn(nonJvmMain)
     getByName("jsBasedMain").dependsOn(nonJvmMain)
-}
-
-android {
-    namespace = "org.kodein.type"
-    defaultConfig {
-        consumerProguardFiles("proguard-rules.pro")
-    }
 }
 
 kodeinUpload {

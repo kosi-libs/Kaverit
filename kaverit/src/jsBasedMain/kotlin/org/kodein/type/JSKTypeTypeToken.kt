@@ -6,7 +6,7 @@ import kotlin.reflect.KTypeProjection
 
 internal class JSKTypeTypeToken<T>(private val type: KType) : AbstractTypeToken<T>() {
 
-    override fun simpleDispString() = type.toString()
+    override fun simpleDispString() = type.toString().stripPackages()
 
     override fun simpleErasedDispString() = (type.classifier as? KClass<*>)?.simpleName ?: "(non-denotable type)"
 
@@ -32,3 +32,8 @@ internal class JSKTypeTypeToken<T>(private val type: KType) : AbstractTypeToken<
 
     override fun typeHashCode(): Int = type.hashCode()
 }
+
+private val packageQualifiedNameRegex = Regex("""\b[a-z][\w.]*\.([A-Z]\w*)""")
+
+internal fun String.stripPackages(): String =
+    replace(packageQualifiedNameRegex) { it.groupValues[1] }
