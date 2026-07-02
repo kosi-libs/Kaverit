@@ -15,9 +15,9 @@ on:
 
 jobs:
   unit-tests:
-    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/unit-tests.yml@main
+    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/unit-tests.yml@mainfix/check-with-android-composite-action-keys
   instrumentation-tests:
-    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/check-with-android.yml@main
+    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/check-with-android.yml@fix/check-with-android-composite-action-keys
 
   upload-snapshot:
     needs: [unit-tests, instrumentation-tests]
@@ -27,7 +27,7 @@ jobs:
       CENTRAL_PORTAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_PORTAL_TOKEN_PASSWORD }}
     steps:
       - name: Setup
-        uses: kosi-libs/kodein-internal-github-actions/setup@main
+        uses: kosi-libs/kodein-internal-github-actions/setup@fix/check-with-android-composite-action-keys
       - name: Upload
         run: ./gradlew publishAggregationToCentralPortalSnapshots -PgitRef=${{ github.ref }} -Psnapshot=true
         shell: bash
