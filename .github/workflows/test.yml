@@ -28,3 +28,4 @@ jobs:
         uses: kosi-libs/kodein-internal-github-actions/setup@main
       - name: Check with Android
         uses: kosi-libs/kodein-internal-github-actions/checkWithAndroid@main
+
