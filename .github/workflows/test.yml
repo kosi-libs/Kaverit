@@ -15,7 +15,7 @@ jobs:
     runs-on: macOS-latest
     steps:
       - name: Setup
-        uses: kosi-libs/kodein-internal-github-actions/setup@fix/check-with-android-composite-action-keys
+        uses: kosi-libs/kodein-internal-github-actions/setup@main
       - name: Check
         run: ./gradlew check
         shell: bash
@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Setup
-        uses: kosi-libs/kodein-internal-github-actions/setup@fix/check-with-android-composite-action-keys
+        uses: kosi-libs/kodein-internal-github-actions/setup@main
       - name: Check with Android
-        uses: kosi-libs/kodein-internal-github-actions/checkWithAndroid@fix/check-with-android-composite-action-keys
+        uses: kosi-libs/kodein-internal-github-actions/checkWithAndroid@main
 
