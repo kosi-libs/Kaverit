@@ -28,3 +28,4 @@ jobs:
         uses: kosi-libs/kodein-internal-github-actions/setup@fix/check-with-android-composite-action-keys
       - name: Check with Android
         uses: kosi-libs/kodein-internal-github-actions/checkWithAndroid@fix/check-with-android-composite-action-keys
+
