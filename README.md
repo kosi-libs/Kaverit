@@ -22,6 +22,9 @@ erased<List<*>>() == generic<List<*>>()
 
 generic<List<String>>() == erasedComp<List<String>>(List::class, String::class)
 ```
+## Developped by
+
+[![Kodein Koders logo.](https://kodein-koders.com/app/uploads/2026/11/colored-invert.svg)](https://kodein-koders.com)
 
 ## Supported by
 
