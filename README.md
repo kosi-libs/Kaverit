@@ -1,3 +1,9 @@
+> [!IMPORTANT]
+> ## Kaverit & Kodein DI are now in maintenance mode
+>
+> **They will no longer receive new features.** We will keep maintaining the current version and fix issues when necessary, but nothing more.
+>
+
 Kaverit
 ===========
 
